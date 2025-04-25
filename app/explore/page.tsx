@@ -26,7 +26,7 @@ export default function ExplorePage() {
   const [walletAddress, setWalletAddress] = useState("0x1234...5678")
   const [postDialogOpen, setPostDialogOpen] = useState(false)
   const [shareDialogOpen, setShareDialogOpen] = useState(false)
-  const [activePostId, setActivePostId] = useState(null)
+  const [activePostId, setActivePostId] = useState<number | null>(null)
   const [viewPlansDialogOpen, setViewPlansDialogOpen] = useState(false)
   const [topPlannersDialogOpen, setTopPlannersDialogOpen] = useState(false)
   const [commentText, setCommentText] = useState("")
@@ -34,7 +34,7 @@ export default function ExplorePage() {
   const [budget, setBudget] = useState("")
   const [startDate, setStartDate] = useState("")
   const [endDate, setEndDate] = useState("")
-  const [selectedInterests, setSelectedInterests] = useState([])
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([])
   const [description, setDescription] = useState("")
   const [rewardsClaimed, setRewardsClaimed] = useState(false)
 
@@ -72,6 +72,8 @@ export default function ExplorePage() {
       comments: 0,
       responses: 0,
       timePosted: "Just now",
+      liked: false,
+      plans: []
     }
 
     setTravelPosts([newPost, ...travelPosts])
@@ -89,7 +91,7 @@ export default function ExplorePage() {
     alert("Travel need posted successfully!")
   }
 
-  const handleSharePost = (postId) => {
+  const handleSharePost = (postId: number) => {
     setActivePostId(postId)
     setShareDialogOpen(true)
   }
@@ -99,12 +101,12 @@ export default function ExplorePage() {
     alert("Rewards claimed successfully! 25 $PLAN tokens added to your wallet.")
   }
 
-  const handleViewPlans = (postId) => {
+  const handleViewPlans = (postId: number) => {
     setActivePostId(postId)
     setViewPlansDialogOpen(true)
   }
 
-  const handleAddComment = (postId) => {
+  const handleAddComment = (postId: number) => {
     if (!commentText.trim()) return
     
     const updatedPosts = travelPosts.map(post => {
@@ -122,7 +124,7 @@ export default function ExplorePage() {
     alert("Comment added successfully!")
   }
 
-  const handleLikePost = (postId) => {
+  const handleLikePost = (postId: number) => {
     const updatedPosts = travelPosts.map(post => {
       if (post.id === postId) {
         return {
@@ -595,7 +597,7 @@ export default function ExplorePage() {
                             {/* Comment input */}
                             <div className="mt-4 flex items-center gap-2">
                               <Input 
-                                placeholder="Add a comment..." 
+                                placeholder="Add a plan..." 
                                 value={commentText}
                                 onChange={(e) => setCommentText(e.target.value)}
                                 onKeyPress={(e) => e.key === 'Enter' && handleAddComment(post.id)}
@@ -605,7 +607,7 @@ export default function ExplorePage() {
                                 className="bg-[#415444] hover:bg-[#415444]/90"
                                 onClick={() => handleAddComment(post.id)}
                               >
-                                Comment
+                                Add Plan 
                               </Button>
                             </div>
                           </CardContent>

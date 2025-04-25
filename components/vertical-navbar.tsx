@@ -1,22 +1,29 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, JSX } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { usePathname } from "next/navigation"
-import { ChevronRight, Compass, Globe, Home, LogOut, Menu, MessageSquare, Settings, User, X } from "lucide-react"
+import { ChevronRight, Compass, Globe, Home, Wallet, Menu, MessageSquare, Settings, User, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-export function VerticalNavbar() {
-  const [expanded, setExpanded] = useState(true)
-  const [isMobile, setIsMobile] = useState(false)
+interface NavItem {
+  name: string;
+  icon: React.ReactNode;
+  href: string;
+}
+
+export function VerticalNavbar(): JSX.Element {
+  const [expanded, setExpanded] = useState<boolean>(true)
+  const [isMobile, setIsMobile] = useState<boolean>(false)
+  const [isWalletConnected, setIsWalletConnected] = useState<boolean>(false)
   const pathname = usePathname()
 
   // Check screen size on mount and resize
   useEffect(() => {
-    const checkScreenSize = () => {
+    const checkScreenSize = (): void => {
       setIsMobile(window.innerWidth < 768)
       if (window.innerWidth < 768) {
         setExpanded(false)
@@ -31,12 +38,24 @@ export function VerticalNavbar() {
     return () => window.removeEventListener('resize', checkScreenSize)
   }, [])
 
-  const navItems = [
-    { name: "Home", icon: <Home className="h-5 w-5" />, href: "/" },
-    { name: "Explore", icon: <Compass className="h-5 w-5" />, href: "/explore" },
-    { name: "Messages", icon: <MessageSquare className="h-5 w-5" />, href: "/messages" },
-    { name: "Profile", icon: <User className="h-5 w-5" />, href: "/profile" },
-    { name: "Settings", icon: <Settings className="h-5 w-5" />, href: "/settings" },
+  const toggleNavbar = (): void => setExpanded(!expanded)
+
+  // Simulate wallet connection (replace with actual RainbowKit implementation later)
+  const handleConnectWallet = (): void => {
+    setIsWalletConnected(!isWalletConnected)
+    
+    // Display a message for now
+    if (!isWalletConnected) {
+      console.log("Please configure WagmiProvider to use RainbowKit")
+    }
+  }
+
+  const navItems: NavItem[] = [
+    { name: "Home", icon: <Home className={cn(expanded ? "h-5 w-5" : "h-6 w-6")} />, href: "/" },
+    { name: "Explore", icon: <Compass className={cn(expanded ? "h-5 w-5" : "h-6 w-6")} />, href: "/explore" },
+    { name: "Messages", icon: <MessageSquare className={cn(expanded ? "h-5 w-5" : "h-6 w-6")} />, href: "/messages" },
+    { name: "Profile", icon: <User className={cn(expanded ? "h-5 w-5" : "h-6 w-6")} />, href: "/profile" },
+    { name: "Settings", icon: <Settings className={cn(expanded ? "h-5 w-5" : "h-6 w-6")} />, href: "/settings" },
   ]
 
   return (
@@ -64,8 +83,11 @@ export function VerticalNavbar() {
         transition={{ duration: 0.3 }}
       >
         <div className="flex h-16 items-center justify-between border-b px-4">
-          <div className={cn("flex items-center gap-2", !expanded && "justify-center w-full")}>
-            <Globe className="h-8 w-8 text-[#415444]" />
+          <div 
+            className={cn("flex items-center gap-2 transition-all cursor-pointer", !expanded && "justify-center w-full")}
+            onClick={toggleNavbar}
+          >
+            <Globe className={cn("text-[#415444]", expanded ? "h-8 w-8" : "h-10 w-10")} />
             {expanded && <span className="text-xl font-bold text-[#415444]">PlanDAO</span>}
           </div>
           
@@ -77,17 +99,6 @@ export function VerticalNavbar() {
               onClick={() => setExpanded(false)}
             >
               {isMobile ? <X className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
-            </Button>
-          )}
-          
-          {!expanded && !isMobile && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => setExpanded(true)}
-            >
-              <Menu className="h-5 w-5" />
             </Button>
           )}
         </div>
@@ -117,19 +128,24 @@ export function VerticalNavbar() {
           </nav>
 
           <div className="mt-auto">
-            <Link href="/logout">
-              <motion.div
-                className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-red-500 transition-colors hover:bg-red-50",
-                  !expanded && "justify-center"
-                )}
-                whileHover={{ x: 5 }}
-                transition={{ type: "spring", stiffness: 300 }}
+            {expanded ? (
+              <Button
+                variant="outline"
+                className="w-full flex items-center gap-2 justify-center rounded-lg px-3 py-2 text-[#415444] border-[#415444] hover:bg-[#e0e5ce] transition-colors"
+                onClick={handleConnectWallet}
               >
-                <LogOut className="h-5 w-5" />
-                {expanded && <span>Logout</span>}
-              </motion.div>
-            </Link>
+                <Wallet className="h-5 w-5 text-[#415444]" />
+                <span>{isWalletConnected ? "0x1a2...3b4c" : "Connect Wallet"}</span>
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                className="w-full p-2 flex items-center justify-center rounded-lg text-[#415444] border-[#415444] hover:bg-[#e0e5ce] transition-colors"
+                onClick={handleConnectWallet}
+              >
+                <Wallet className="h-7 w-7 text-[#415444]" />
+              </Button>
+            )}
           </div>
         </div>
       </motion.aside>
