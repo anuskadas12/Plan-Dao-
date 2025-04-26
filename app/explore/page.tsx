@@ -6,6 +6,7 @@ import { CalendarDays, Clock, Gift, Heart, MapPin, MessageSquare, Plus, Share2, 
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -20,6 +21,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "@/components/ui/use-toast"
 import { ToastAction } from "@/components/ui/toast"
+import { Toast } from "@/components/ui/toast"
 
 export default function ExplorePage() {
   const [walletConnected, setWalletConnected] = useState(false)
@@ -37,6 +39,23 @@ export default function ExplorePage() {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([])
   const [description, setDescription] = useState("")
   const [rewardsClaimed, setRewardsClaimed] = useState(false)
+  const [tokenConfirmDialogOpen, setTokenConfirmDialogOpen] = useState(false)
+  const [fullItineraryDialogOpen, setFullItineraryDialogOpen] = useState(false)
+  const [activeItinerary, setActiveItinerary] = useState<any>(null)
+  const [connectPlannerDialogOpen, setConnectPlannerDialogOpen] = useState(false)
+  const [activePlanner, setActivePlanner] = useState("")
+  const [plannerMessageText, setPlannerMessageText] = useState("")
+  const [toastOpen, setToastOpen] = useState(false)
+  const [toastMessage, setToastMessage] = useState({ title: "", description: "" })
+
+  const handleSendPlannerMessage = () => {
+    setConnectPlannerDialogOpen(false)
+    setToastMessage({
+      title: "Message Sent",
+      description: `Your message has been sent to ${activePlanner}.`
+    })
+    setToastOpen(true)
+  }
 
   const handleConnectWallet = () => {
     if (walletConnected) {
@@ -55,6 +74,11 @@ export default function ExplorePage() {
       return
     }
 
+    // Open token confirmation dialog
+    setTokenConfirmDialogOpen(true)
+  }
+  
+  const handleConfirmPostSubmission = () => {
     // Create a new post and add it to the travelPosts array
     const newPost = {
       id: travelPosts.length + 1,
@@ -77,6 +101,7 @@ export default function ExplorePage() {
     }
 
     setTravelPosts([newPost, ...travelPosts])
+    setTokenConfirmDialogOpen(false)
     setPostDialogOpen(false)
     
     // Reset form
@@ -104,6 +129,16 @@ export default function ExplorePage() {
   const handleViewPlans = (postId: number) => {
     setActivePostId(postId)
     setViewPlansDialogOpen(true)
+  }
+
+  const handleViewFullItinerary = (plan: any) => {
+    setActiveItinerary(plan)
+    setFullItineraryDialogOpen(true)
+  }
+
+  const handleConnectWithPlanner = (plannerName: string) => {
+    alert(`Request to connect with ${plannerName} sent successfully!`)
+    setFullItineraryDialogOpen(false)
   }
 
   const handleAddComment = (postId: number) => {
@@ -164,21 +199,114 @@ export default function ExplorePage() {
           title: "10-Day Tokyo & Kyoto Adventure",
           highlights: ["Tsukiji Fish Market", "Ghibli Museum", "Fushimi Inari"],
           budget: "$1,450",
-          rating: 4.9
+          rating: 4.9,
+          fullItinerary: {
+            days: [
+              {
+                day: 1,
+                title: "Tokyo Arrival & Orientation",
+                activities: [
+                  "Airport pickup and transfer to hotel in Shinjuku",
+                  "Evening walk through Shinjuku's neon districts",
+                  "Welcome dinner at local izakaya"
+                ]
+              },
+              {
+                day: 2,
+                title: "Tokyo Food & Culture",
+                activities: [
+                  "Early morning visit to Tsukiji Outer Market",
+                  "Sushi making workshop",
+                  "Afternoon visit to Meiji Shrine"
+                ]
+              },
+              {
+                day: 3,
+                title: "Anime & Pop Culture Day",
+                activities: [
+                  "Morning visit to Ghibli Museum",
+                  "Explore Akihabara Electric Town",
+                  "Maid cafe experience"
+                ]
+              }
+            ]
+          }
         },
         {
           planner: "Michael Chen",
           title: "Japan Anime & Food Tour",
           highlights: ["Akihabara Electric Town", "Izakaya Hopping", "TeamLab Borderless"],
           budget: "$1,380",
-          rating: 4.7
+          rating: 4.7,
+          fullItinerary: {
+            days: [
+              {
+                day: 1,
+                title: "Tokyo Arrival & Anime Districts",
+                activities: [
+                  "Check-in at anime-themed hotel in Ikebukuro",
+                  "Visit Sunshine City Pokemon Center",
+                  "Dinner at themed restaurant"
+                ]
+              },
+              {
+                day: 2,
+                title: "Otaku Culture Immersion",
+                activities: [
+                  "Full day in Akihabara with private guide",
+                  "Anime merchandise shopping",
+                  "Maid cafe lunch experience"
+                ]
+              },
+              {
+                day: 3,
+                title: "Modern Art & Technology",
+                activities: [
+                  "TeamLab Borderless digital art museum",
+                  "Odaiba entertainment district",
+                  "Tokyo skyline views from Mori Tower"
+                ]
+              }
+            ]
+          }
         },
         {
           planner: "Sophia Rodriguez",
           title: "Cultural Japan Experience",
           highlights: ["Tea Ceremony", "Mt. Fuji Day Trip", "Nara Deer Park"],
           budget: "$1,520",
-          rating: 4.8
+          rating: 4.8,
+          fullItinerary: {
+            days: [
+              {
+                day: 1,
+                title: "Tokyo Traditional Culture",
+                activities: [
+                  "Morning visit to Asakusa & Senso-ji Temple",
+                  "Traditional tea ceremony experience",
+                  "Japanese calligraphy class"
+                ]
+              },
+              {
+                day: 2,
+                title: "Mt. Fuji Adventure",
+                activities: [
+                  "Full day trip to Mt. Fuji area",
+                  "Lake Kawaguchi scenic spots",
+                  "Hot spring experience"
+                ]
+              },
+              {
+                day: 3,
+                title: "Kyoto & Nara Cultural Tour",
+                activities: [
+                  "Bullet train to Kyoto",
+                  "Fushimi Inari shrine visit",
+                  "Afternoon with Nara's friendly deer"
+                ]
+              }
+            ]
+          }
         }
       ]
     },
@@ -206,14 +334,76 @@ export default function ExplorePage() {
           title: "Romantic Italian Getaway",
           highlights: ["Private Gondola Ride", "Tuscan Winery Tour", "Vatican After Hours"],
           budget: "$2,150",
-          rating: 4.9
+          rating: 4.9,
+          fullItinerary: {
+            days: [
+              {
+                day: 1,
+                title: "Rome Arrival & Ancient History",
+                activities: [
+                  "Private airport transfer to luxury hotel near Spanish Steps",
+                  "Evening walking tour of illuminated Rome",
+                  "Romantic dinner in Trastevere"
+                ]
+              },
+              {
+                day: 2,
+                title: "Vatican & Roman Romance",
+                activities: [
+                  "Early access Vatican Museums & Sistine Chapel tour",
+                  "Lunch at rooftop restaurant with city views",
+                  "Sunset Colosseum and Forum private tour"
+                ]
+              },
+              {
+                day: 3,
+                title: "Florence Art & Culture",
+                activities: [
+                  "First class train to Florence",
+                  "Skip-the-line Uffizi Gallery tour",
+                  "Evening cooking class with local chef"
+                ]
+              }
+            ]
+          }
         },
         {
           planner: "David Kim",
           title: "Art & History Tour of Italy",
           highlights: ["Skip-the-line Uffizi", "Hidden Rome Tour", "Venice Mask Workshop"],
           budget: "$2,300",
-          rating: 4.6
+          rating: 4.6,
+          fullItinerary: {
+            days: [
+              {
+                day: 1,
+                title: "Rome's Hidden Treasures",
+                activities: [
+                  "Off-the-beaten-path Rome walking tour",
+                  "Secret passages of Castel Sant'Angelo",
+                  "Dinner at historic restaurant"
+                ]
+              },
+              {
+                day: 2,
+                title: "Florence Renaissance Immersion",
+                activities: [
+                  "Early morning Duomo climb",
+                  "Extended Uffizi Gallery art tour with expert",
+                  "Artisan workshop visit in Oltrarno district"
+                ]
+              },
+              {
+                day: 3,
+                title: "Venice Art & Crafts",
+                activities: [
+                  "Traditional Venetian mask-making workshop",
+                  "Private art collection visits",
+                  "Exclusive after-hours Doge's Palace tour"
+                ]
+              }
+            ]
+          }
         }
       ]
     },
@@ -241,14 +431,76 @@ export default function ExplorePage() {
           title: "Thailand Beach & Party Tour",
           highlights: ["Full Moon Party", "Secret Beach Camping", "Street Food Safari"],
           budget: "$1,750",
-          rating: 4.8
+          rating: 4.8,
+          fullItinerary: {
+            days: [
+              {
+                day: 1,
+                title: "Bangkok Arrival & Nightlife",
+                activities: [
+                  "Check in at trendy hostel in Bangkok",
+                  "Street food tour in Chinatown",
+                  "Khao San Road party experience"
+                ]
+              },
+              {
+                day: 2,
+                title: "Island Paradise: Koh Phangan",
+                activities: [
+                  "Flight to Koh Samui and boat to Koh Phangan",
+                  "Beach relaxation and snorkeling",
+                  "Legendary Full Moon Party (or Half Moon if dates don't align)"
+                ]
+              },
+              {
+                day: 3,
+                title: "Hidden Gems of South Thailand",
+                activities: [
+                  "Exclusive beach camping experience",
+                  "Local fishing village visit",
+                  "Sunset BBQ with fresh seafood"
+                ]
+              }
+            ]
+          }
         },
         {
           planner: "Michael Chen",
           title: "Authentic Thailand Experience",
           highlights: ["Cooking Class", "Hidden Waterfalls", "Local Homestay"],
           budget: "$1,600",
-          rating: 4.7
+          rating: 4.7,
+          fullItinerary: {
+            days: [
+              {
+                day: 1,
+                title: "Chiang Mai Cultural Immersion",
+                activities: [
+                  "Local homestay in traditional northern Thai house",
+                  "Thai cooking class with market visit",
+                  "Evening street food crawl and night market"
+                ]
+              },
+              {
+                day: 2,
+                title: "Nature & Adventure Day",
+                activities: [
+                  "Hidden waterfall trek with local guide",
+                  "Natural hot springs visit",
+                  "Traditional Khan Toke dinner"
+                ]
+              },
+              {
+                day: 3,
+                title: "Island Life: Koh Lanta",
+                activities: [
+                  "Transfer to quieter Koh Lanta",
+                  "Kayaking in mangrove forests",
+                  "Sunset beach BBQ with local musicians"
+                ]
+              }
+            ]
+          }
         }
       ]
     },
@@ -276,21 +528,114 @@ export default function ExplorePage() {
           title: "Iceland Winter Wonderland",
           highlights: ["Northern Lights Hunt", "Blue Lagoon VIP", "Ice Cave Tour"],
           budget: "$2,950",
-          rating: 4.9
+          rating: 4.9,
+          fullItinerary: {
+            days: [
+              {
+                day: 1,
+                title: "Reykjavik & Blue Lagoon",
+                activities: [
+                  "Airport pickup in 4x4 vehicle",
+                  "Blue Lagoon VIP entrance with private changing room",
+                  "Northern Lights evening hunt with photographer"
+                ]
+              },
+              {
+                day: 2,
+                title: "South Coast Wonders",
+                activities: [
+                  "Seljalandsfoss and Skógafoss waterfalls",
+                  "Black beach at Reynisfjara",
+                  "Ice cave exploration with specialist equipment"
+                ]
+              },
+              {
+                day: 3,
+                title: "Golden Circle & Geothermal Experience",
+                activities: [
+                  "Þingvellir National Park tectonic plates",
+                  "Geysir and Gullfoss waterfall",
+                  "Secret Lagoon hot spring with floating experience"
+                ]
+              }
+            ]
+          }
         },
         {
           planner: "Michael Chen",
           title: "Golden Circle & South Coast",
           highlights: ["Glacier Hike", "Secret Lagoon", "Bubble Hotel Stay"],
           budget: "$3,100",
-          rating: 4.8
+          rating: 4.8,
+          fullItinerary: {
+            days: [
+              {
+                day: 1,
+                title: "Golden Circle Highlights",
+                activities: [
+                  "Þingvellir National Park with hidden waterfall spot",
+                  "Extended visit to Geysir geothermal area",
+                  "Overnight in transparent bubble hotel for Northern Lights"
+                ]
+              },
+              {
+                day: 2,
+                title: "Glacier Adventure",
+                activities: [
+                  "Full day glacier hike expedition with all equipment",
+                  "Ice climbing intro for beginners",
+                  "Hot chocolate by glacier lagoon"
+                ]
+              },
+              {
+                day: 3,
+                title: "Hot Spring Hunt",
+                activities: [
+                  "Secret Lagoon morning relaxation",
+                  "Off-road adventure to hidden hot springs",
+                  "Traditional Icelandic lamb dinner"
+                ]
+              }
+            ]
+          }
         },
         {
           planner: "David Kim",
           title: "Iceland Adventure Tour",
           highlights: ["Snowmobile Tour", "Hot Spring Hopping", "4x4 Winter Driving"],
           budget: "$2,850",
-          rating: 4.7
+          rating: 4.7,
+          fullItinerary: {
+            days: [
+              {
+                day: 1,
+                title: "4x4 Driving & Winter Skills",
+                activities: [
+                  "Winter driving course with experienced instructor",
+                  "Snowmobile tour on glacier",
+                  "Evening at local hot pot with Icelandic beer tasting"
+                ]
+              },
+              {
+                day: 2,
+                title: "South Coast Adventure",
+                activities: [
+                  "Self-drive with prepared GPS coordinates",
+                  "Hidden waterfalls accessible only by 4x4",
+                  "Northern Lights photography workshop"
+                ]
+              },
+              {
+                day: 3,
+                title: "Hot Spring Road Trip",
+                activities: [
+                  "Guided tour of multiple natural hot springs",
+                  "Traditional Icelandic farm visit",
+                  "Farewell dinner in revolving restaurant"
+                ]
+              }
+            ]
+          }
         }
       ]
     },
@@ -508,277 +853,261 @@ export default function ExplorePage() {
                   </DialogContent>
                 </Dialog>
 
-                {/* Travel Posts */}
-                <div className="space-y-6">
-                  <AnimatePresence>
-                    {travelPosts.map((post, index) => (
-                      <motion.div
-                        key={post.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ delay: index * 0.1, duration: 0.5 }}
-                      >
-                        <Card className="overflow-hidden border-0 bg-white shadow-md hover:shadow-lg transition-all duration-300">
-                          <CardHeader className="bg-[#f8f9fa] pb-4">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <Avatar>
-                                  <AvatarImage src={post.user.avatar || "/placeholder.svg"} alt={post.user.name} />
-                                  <AvatarFallback>{post.user.name.charAt(0)}</AvatarFallback>
-                                </Avatar>
-                                <div>
-                                  <div className="flex items-center gap-2">
-                                    <span className="font-medium">{post.user.name}</span>
-                                    {post.user.verified && (
-                                      <Badge variant="outline" className="bg-[#e0e5ce] text-[#415444] border-0">
-                                        Verified
-                                      </Badge>
-                                    )}
-                                  </div>
-                                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                                    <Clock className="h-3 w-3" />
-                                    <span>{post.timePosted}</span>
-                                  </div>
-                                </div>
-                              </div>
-                              <Button variant="ghost" size="icon" onClick={() => handleSharePost(post.id)}>
-                                <Share2 className="h-5 w-5" />
-                              </Button>
-                            </div>
-                          </CardHeader>
-                          <CardContent className="pt-4">
-                            <div className="mb-4 flex flex-wrap gap-2">
-                              <div className="flex items-center gap-1 rounded-full bg-[#e0e5ce] px-3 py-1 text-sm text-[#415444]">
-                                <MapPin className="h-4 w-4" />
-                                <span>{post.destination}</span>
-                              </div>
-                              <div className="flex items-center gap-1 rounded-full bg-[#e0e5ce] px-3 py-1 text-sm text-[#415444]">
-                                <CalendarDays className="h-4 w-4" />
-                                <span>{post.dates}</span>
-                              </div>
-                              <div className="flex items-center gap-1 rounded-full bg-[#e0e5ce] px-3 py-1 text-sm text-[#415444]">
-                                <svg
-                                  width="16"
-                                  height="16"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M12 1V23"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                  <path
-                                    d="M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3687 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                </svg>
-                                <span>{post.budget}</span>
-                              </div>
-                            </div>
-
-                            <p className="mb-4 text-gray-700">{post.description}</p>
-
-                            <div className="flex flex-wrap gap-2">
-                              {post.interests.map((interest, i) => (
-                                <Badge key={i} variant="secondary" className="bg-[#f8f9fa]">
-                                  {interest}
-                                </Badge>
-                              ))}
-                            </div>
-                            
-                            {/* Comment input */}
-                            <div className="mt-4 flex items-center gap-2">
-                              <Input 
-                                placeholder="Add a plan..." 
-                                value={commentText}
-                                onChange={(e) => setCommentText(e.target.value)}
-                                onKeyPress={(e) => e.key === 'Enter' && handleAddComment(post.id)}
-                              />
-                              <Button 
-                                size="sm" 
-                                className="bg-[#415444] hover:bg-[#415444]/90"
-                                onClick={() => handleAddComment(post.id)}
-                              >
-                                Add Plan 
-                              </Button>
-                            </div>
-                          </CardContent>
-                          <CardFooter className="border-t bg-[#f8f9fa] px-6 py-3">
-                            <div className="flex w-full items-center justify-between">
-                              <div className="flex items-center gap-6">
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm" 
-                                  className={`flex items-center gap-1 px-2 ${post.liked ? 'text-red-500' : ''}`}
-                                  onClick={() => handleLikePost(post.id)}
-                                >
-                                  <Heart className={`h-4 w-4 ${post.liked ? 'fill-current' : ''}`} />
-                                  <span>{post.likes}</span>
-                                </Button>
-                                <Button variant="ghost" size="sm" className="flex items-center gap-1 px-2">
-                                  <MessageSquare className="h-4 w-4" />
-                                  <span>{post.comments}</span>
-                                </Button>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <span className="text-sm text-gray-600">{post.responses} planner responses</span>
-                                <Button 
-                                  size="sm" 
-                                  className="bg-[#415444] hover:bg-[#415444]/90"
-                                  onClick={() => handleViewPlans(post.id)}
-                                >
-                                  View Plans
-                                </Button>
-                              </div>
-                            </div>
-                          </CardFooter>
-                        </Card>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </div>
-              </div>
-
-              {/* Right Column - Daily Claim Box */}
-              <div>
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8 }}
-                >
-                  <Card className="sticky top-8 border-0 bg-gradient-to-br from-[#415444] to-[#338838] text-white overflow-hidden">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Gift className="h-5 w-5" />
-                        Daily Rewards
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="mb-6 flex flex-col items-center">
-                        <div className="mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-white/20 p-2">
-                          <div className="flex h-full w-full items-center justify-center rounded-full bg-white/20">
-                            {rewardsClaimed ? (
-                              <Check className="h-12 w-12 text-white" />
-                            ) : (
-                              <svg
-                                width="48"
-                                height="48"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                                  stroke="white"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d="M15 9.35L12 6.35L9 9.35"
-                                  stroke="white"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d="M12 18V9"
-                                  stroke="white"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              </svg>
-                            )}
+                <Dialog open={tokenConfirmDialogOpen} onOpenChange={setTokenConfirmDialogOpen}>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Confirm Posting</DialogTitle>
+                      <DialogDescription>
+                        Posting your travel need requires 5 $PLAN tokens. You currently have 100 $PLAN tokens.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-4">
+                      <div className="flex items-center justify-between rounded-lg bg-[#e0e5ce] p-4">
+                        <div className="flex items-center gap-2">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#415444]">
+                            <Gift className="h-5 w-5 text-white" />
+                          </div>
+                          <div>
+                            <p className="font-medium text-[#415444]">5 $PLAN tokens</p>
+                            <p className="text-sm text-[#415444]/70">Will be deducted from your wallet</p>
                           </div>
                         </div>
-                        <h3 className="text-2xl font-bold">25 $PLAN</h3>
-                        <p className="mt-1 text-sm text-white/80">
-                          {rewardsClaimed ? "Claimed today" : "Available to claim"}
-                        </p>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 rounded-lg bg-white px-3 text-xs font-medium text-[#415444]"
+                        >
+                          View Balance
+                        </Button>
                       </div>
-
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                        <span>Streak Bonus</span>
-                          <span>+5 $PLAN</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span>Referral Bonus</span>
-                          <span>+10 $PLAN</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span>Activity Reward</span>
-                          <span>+10 $PLAN</span>
-                        </div>
-                        <Separator className="bg-white/20" />
-                        <div className="flex items-center justify-between font-semibold">
-                          <span>Total</span>
-                          <span>25 $PLAN</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                      <Button 
-                        className={`w-full ${rewardsClaimed ? 'bg-white/30 cursor-not-allowed' : 'bg-white hover:bg-white/90'} text-[#415444]`}
-                        onClick={handleClaimRewards}
-                        disabled={rewardsClaimed}
-                      >
-                        {rewardsClaimed ? 'Rewards Claimed' : 'Claim Rewards'}
+                    </div>
+                    <div className="flex justify-end gap-4">
+                      <Button variant="outline" onClick={() => setTokenConfirmDialogOpen(false)}>
+                        Cancel
                       </Button>
-                    </CardFooter>
-                  </Card>
+                      <Button className="bg-[#415444] hover:bg-[#415444]/90" onClick={handleConfirmPostSubmission}>
+                        Confirm & Post
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
 
-                  <Card className="mt-6 border-0 bg-[#e0e5ce] overflow-hidden">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2 text-[#415444]">
-                        <User className="h-5 w-5" />
-                        Top Planners
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {topPlanners.slice(0, 3).map((planner, index) => (
-                          <div key={index} className="flex items-center gap-3">
-                            <Avatar>
-                              <AvatarImage src={planner.avatar || "/placeholder.svg"} alt={planner.name} />
-                              <AvatarFallback>{planner.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1">
-                              <div className="flex items-center justify-between">
-                                <span className="font-medium">{planner.name}</span>
-                                <div className="flex items-center gap-1">
-                                  <svg className="h-4 w-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                  </svg>
-                                  <span className="text-sm">{planner.rating}</span>
-                                </div>
-                              </div>
-                              <div className="text-sm text-gray-600">{planner.plans} plans created</div>
+                {/* Travel Posts List */}
+                {travelPosts.map((post) => (
+                  <Card key={post.id} className="mb-6 border-[#e0e5ce]">
+                    <CardHeader className="pb-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <Avatar>
+                            <AvatarImage src={post.user.avatar} alt={post.user.name} />
+                            <AvatarFallback>{post.user.name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-semibold">{post.user.name}</h3>
+                              {post.user.verified && (
+                                <Badge variant="outline" className="rounded-full border-[#415444] px-2 py-0 text-xs text-[#415444]">
+                                  <Check className="mr-1 h-3 w-3" />
+                                  Verified
+                                </Badge>
+                              )}
                             </div>
+                            <p className="text-sm text-gray-500">{post.timePosted}</p>
                           </div>
+                        </div>
+                        <Button variant="ghost" size="sm" onClick={() => handleSharePost(post.id)}>
+                          <Share2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pb-2">
+                      <div className="mb-4 flex flex-wrap gap-3">
+                        <Badge className="bg-[#e0e5ce] text-[#415444]">
+                          <MapPin className="mr-1 h-3 w-3" />
+                          {post.destination}
+                        </Badge>
+                        <Badge className="bg-[#e0e5ce] text-[#415444]">
+                          <CalendarDays className="mr-1 h-3 w-3" />
+                          {post.dates}
+                        </Badge>
+                        <Badge className="bg-[#e0e5ce] text-[#415444]">
+                          <Gift className="mr-1 h-3 w-3" />
+                          {post.budget}
+                        </Badge>
+                      </div>
+                      <div className="mb-3 flex flex-wrap gap-2">
+                        {post.interests.map((interest, i) => (
+                          <Badge key={i} variant="outline" className="border-[#415444]/30 text-[#415444]">
+                            {interest}
+                          </Badge>
                         ))}
                       </div>
+                      <p className="text-gray-600">{post.description}</p>
                     </CardContent>
-                    <CardFooter>
-                      <Button 
-                        variant="outline" 
-                        className="w-full border-[#415444] text-[#415444]"
-                        onClick={() => setTopPlannersDialogOpen(true)}
+                    <CardFooter className="flex items-center justify-between border-t border-[#e0e5ce] pt-3">
+                      <div className="flex items-center gap-6">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className={`flex items-center gap-1 p-0 ${post.liked ? "text-red-500" : "text-gray-500"}`}
+                          onClick={() => handleLikePost(post.id)}
+                        >
+                          <Heart className={`h-4 w-4 ${post.liked ? "fill-current" : ""}`} />
+                          <span>{post.likes}</span>
+                        </Button>
+                        <Button variant="ghost" size="sm" className="flex items-center gap-1 p-0 text-gray-500">
+                          <MessageSquare className="h-4 w-4" />
+                          <span>{post.comments}</span>
+                        </Button>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-[#415444] text-[#415444] hover:bg-[#415444] hover:text-white"
+                        onClick={() => handleViewPlans(post.id)}
                       >
-                        View All Planners
+                        View {post.responses} Plans
                       </Button>
                     </CardFooter>
                   </Card>
-                </motion.div>
+                ))}
+              </div>
+
+              {/* Right Column - Sidebar */}
+              <div className="space-y-6">
+                {/* Rewards Card */}
+                <Card className="border-[#e0e5ce]">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-xl text-[#415444]">Earn $PLAN Tokens</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pb-3">
+                    <div className="mb-4 space-y-2">
+                      <div className="flex items-center justify-between rounded-lg bg-[#f8f9fa] p-3">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e0e5ce]">
+                            <Gift className="h-4 w-4 text-[#415444]" />
+                          </div>
+                          <span className="text-sm">Create a travel plan</span>
+                        </div>
+                        <Badge className="bg-[#e0e5ce] text-[#415444]">+10 $PLAN</Badge>
+                      </div>
+                      <div className="flex items-center justify-between rounded-lg bg-[#f8f9fa] p-3">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e0e5ce]">
+                            <Heart className="h-4 w-4 text-[#415444]" />
+                          </div>
+                          <span className="text-sm">Get likes on your plan</span>
+                        </div>
+                        <Badge className="bg-[#e0e5ce] text-[#415444]">+2 $PLAN</Badge>
+                      </div>
+                      <div className="flex items-center justify-between rounded-lg bg-[#f8f9fa] p-3">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e0e5ce]">
+                            <User className="h-4 w-4 text-[#415444]" />
+                          </div>
+                          <span className="text-sm">Refer a friend</span>
+                        </div>
+                        <Badge className="bg-[#e0e5ce] text-[#415444]">+25 $PLAN</Badge>
+                      </div>
+                    </div>
+                    <Button
+                      className={`w-full gap-2 ${
+                        rewardsClaimed ? "bg-gray-300" : "bg-[#415444] hover:bg-[#415444]/90"
+                      }`}
+                      disabled={rewardsClaimed}
+                      onClick={handleClaimRewards}
+                    >
+                      {rewardsClaimed ? "Rewards Claimed" : "Claim 25 $PLAN Tokens"}
+                      {rewardsClaimed && <Check className="h-4 w-4" />}
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* Top Planners Card */}
+                <Card className="border-[#e0e5ce]">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-xl text-[#415444]">Top Planners</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pb-3">
+                    <div className="space-y-3">
+                      {topPlanners.slice(0, 3).map((planner, i) => (
+                        <div key={i} className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <Avatar>
+                              <AvatarImage src={planner.avatar} alt={planner.name} />
+                              <AvatarFallback>{planner.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-medium">{planner.name}</p>
+                              <div className="flex items-center gap-1 text-amber-500">
+                                <span className="text-xs">{planner.rating}</span>
+                                <span className="text-xs">★</span>
+                                <span className="text-xs text-gray-400">• {planner.plans} plans</span>
+                              </div>
+                            </div>
+                          </div>
+                          <Button variant="ghost" size="sm" className="h-8 text-xs text-[#415444]">
+                            View
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                    <Button
+                      variant="outline"
+                      className="mt-4 w-full text-[#415444]"
+                      onClick={() => setTopPlannersDialogOpen(true)}
+                    >
+                      View All Planners
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* How It Works Card */}
+                <Card className="border-[#e0e5ce]">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-xl text-[#415444]">How It Works</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pb-5">
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-3">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#e0e5ce] text-[#415444]">
+                          1
+                        </div>
+                        <div>
+                          <p className="font-medium">Post Your Travel Need</p>
+                          <p className="text-sm text-gray-500">Share details about your upcoming trip</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#e0e5ce] text-[#415444]">
+                          2
+                        </div>
+                        <div>
+                          <p className="font-medium">Receive Custom Plans</p>
+                          <p className="text-sm text-gray-500">Get personalized itineraries from verified planners</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#e0e5ce] text-[#415444]">
+                          3
+                        </div>
+                        <div>
+                          <p className="font-medium">Choose Your Favorite</p>
+                          <p className="text-sm text-gray-500">Select the plan that best fits your travel style</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#e0e5ce] text-[#415444]">
+                          4
+                        </div>
+                        <div>
+                          <p className="font-medium">Travel & Earn Tokens</p>
+                          <p className="text-sm text-gray-500">Enjoy your trip and earn $PLAN tokens by contributing</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </div>
@@ -789,53 +1118,67 @@ export default function ExplorePage() {
       <Dialog open={shareDialogOpen} onOpenChange={setShareDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Share this travel plan</DialogTitle>
+            <DialogTitle>Share Travel Need</DialogTitle>
             <DialogDescription>
-              Share this travel need with friends or on social media
+              Share this travel need with friends or on social media.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="flex flex-col gap-3">
-              <Button className="flex items-center justify-start gap-2 bg-[#25D366] hover:bg-[#25D366]/90 text-white">
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"></path>
-                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm6.246 16.945c-.833 1.245-1.841 2.247-3.083 3.176-1.25.934-2.595 1.628-4.09 2.102a12.316 12.316 0 01-4.57.519c-1.454-.156-2.867-.566-4.22-1.249l-.18-.107c-1.176-.725-2.185-1.614-3.033-2.674-.844-1.058-1.458-2.251-1.873-3.603-.415-1.352-.573-2.76-.425-4.22.156-1.454.566-2.867 1.249-4.22l.107-.18c.725-1.176 1.614-2.185 2.674-3.033 1.058-.844 2.251-1.458 3.603-1.873 1.352-.415 2.76-.573 4.22-.425 1.454.156 2.867.566 4.22 1.249l.18.107c1.176.725 2.185 1.614 3.033 2.674.844 1.058 1.458 2.251 1.873 3.603.415 1.352.573 2.76.425 4.22-.156 1.454-.566 2.867-1.249 4.22l-.107.18c-.464.751-.991 1.43-1.58 2.034z"></path>
-                </svg>
-                Share on WhatsApp
-              </Button>
-              <Button className="flex items-center justify-start gap-2 bg-[#1DA1F2] hover:bg-[#1DA1F2]/90 text-white">
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"></path>
-                </svg>
-                Share on Twitter
-              </Button>
-              <Button className="flex items-center justify-start gap-2 bg-[#4267B2] hover:bg-[#4267B2]/90 text-white">
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path>
+            <div className="flex flex-col gap-4">
+              <Button variant="outline" className="flex items-center justify-center gap-2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M18 2H15C13.6739 2 12.4021 2.52678 11.4645 3.46447C10.5268 4.40215 10 5.67392 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73478 14.1054 6.48043 14.2929 6.29289C14.4804 6.10536 14.7348 6 15 6H18V2Z"
+                    stroke="#1D1D1D"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
                 Share on Facebook
               </Button>
-              <Button className="flex items-center justify-start gap-2 bg-[#E60023] hover:bg-[#E60023]/90 text-white">
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"></path>
+              <Button variant="outline" className="flex items-center justify-center gap-2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M22 4.01C21 4.5 20.02 4.69 19 5C17.879 3.735 16.119 3.665 14.38 4.53C12.64 5.395 11.759 7.007 12.02 9H12C7.9 9 5.2 6.8 3 3C1.3 6 2.4 9.1 5 11C4.21 11.02 3.42 10.8 2.69 10.4C2.72 12.96 4.18 15.05 6.58 15.58C5.95 15.77 5.31 15.83 4.69 15.77C5.26 17.64 6.99 18.94 9 19C7.07 20.43 4.97 21.17 3 21C5.07 22.14 7.35 22.73 9.69 22.73C16.69 22.73 21.21 16.78 20.96 9.73C21.99 9.09 22.88 8.25 23.5 7.23C22.61 7.59 21.66 7.79 20.7 7.83C21.73 7.23 22.53 6.26 22.9 5.09C21.93 5.68 20.88 6.08 19.8 6.3C18.83 5.24 17.72 4.74 16.32 4.74C14.98 4.74 13.86 5.16 12.97 6C12.08 6.84 11.64 7.86 11.64 9.06C11.64 9.46 11.69 9.84 11.79 10.2C8.5 10.03 5.48 8.33 2.73 5.09C2.25 5.92 2.01 6.77 2.01 7.66C2.01 8.5 2.21 9.27 2.61 9.97C3.01 10.67 3.56 11.23 4.26 11.63C3.55 11.6 2.85 11.42 2.17 11.09V11.14C2.17 12.2 2.5 13.13 3.16 13.93C3.82 14.73 4.66 15.25 5.66 15.47C5.21 15.58 4.76 15.63 4.31 15.63C4.01 15.63 3.7 15.6 3.37 15.54C3.69 16.39 4.23 17.07 4.98 17.59C5.73 18.11 6.56 18.38 7.47 18.41C5.81 19.72 3.95 20.38 1.89 20.38C1.5 20.38 1.12 20.36 0.75 20.32C2.81 21.7 5.08 22.38 7.56 22.38C9.39 22.38 11.1 22.07 12.67 21.45C14.24 20.83 15.59 20.01 16.7 18.99C17.82 17.97 18.73 16.81 19.44 15.5C20.15 14.19 20.64 12.85 20.92 11.48C21.2 10.11 21.34 8.77 21.34 7.46C21.34 7.19 21.33 7 21.32 6.89C22.31 6.21 23.15 5.42 23.84 4.5L22 4.01Z"
+                    stroke="#1D1D1D"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
-                Share on Pinterest
+                Share on Twitter
               </Button>
-              <div className="relative mt-2">
-                <Input 
-                  value={`https://travelplanner.com/post/${activePostId}`} 
-                  readOnly 
-                  className="pr-24"
-                />
-                <Button 
-                  className="absolute right-1 top-1 h-8 bg-[#415444] hover:bg-[#415444]/90"
-                  onClick={() => {
-                    navigator.clipboard.writeText(`https://travelplanner.com/post/${activePostId}`);
-                    alert("Link copied to clipboard!");
-                  }}
-                >
-                  Copy Link
-                </Button>
+              <Button variant="outline" className="flex items-center justify-center gap-2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M22 11.7424C22 17.1231 17.5108 21.4846 12 21.4846C10.9243 21.4846 9.88773 21.3332 8.91549 21.0509C7.21584 21.9508 5.27768 22.4285 3.27446 22.4998C3.06619 22.5091 2.89487 22.3337 2.92323 22.1274C3.07673 20.8952 2.97588 19.1494 2.45549 17.5157C1.37524 15.4338 0.770935 13.0602 0.770935 11.0137C0.770935 5.97178 5.3134 1.76923 11 1.76923"
+                    stroke="#1D1D1D"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M10.9792 11.7143C10.9792 14.5143 13.2537 16.7857 16.0569 16.7857C17.4593 16.7857 18.732 16.2402 19.6569 15.3568C20.566 14.4891 21.1345 13.2791 21.1345 11.9429C21.1345 9.14286 18.86 6.87143 16.0569 6.87143C13.2537 6.87143 10.9792 9.14286 10.9792 11.7143Z"
+                    stroke="#1D1D1D"
+                    strokeWidth="1.5"
+                  />
+                </svg>
+                Send as Message
+              </Button>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="share-link">Copy Link</Label>
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="share-link"
+                    value={`https://travelplans.io/post/${activePostId}`}
+                    readOnly
+                    className="flex-1"
+                  />
+                  <Button variant="outline" className="shrink-0">
+                    Copy
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -848,104 +1191,136 @@ export default function ExplorePage() {
           <DialogHeader>
             <DialogTitle>Travel Plans for {activePost?.destination}</DialogTitle>
             <DialogDescription>
-              View customized travel plans created by verified planners
+              Compare custom itineraries created by verified travel planners.
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-4">
+          <div className="max-h-[60vh] overflow-y-auto pr-2">
             <Tabs defaultValue="plans" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="plans">Available Plans ({activePost?.plans?.length || 0})</TabsTrigger>
-                <TabsTrigger value="request">Request New Plan</TabsTrigger>
+                <TabsTrigger value="plans">Travel Plans ({activePost?.plans.length || 0})</TabsTrigger>
+                <TabsTrigger value="comments">Comments ({activePost?.comments || 0})</TabsTrigger>
               </TabsList>
-              <TabsContent value="plans" className="max-h-[400px] overflow-y-auto">
-                {activePost?.plans?.map((plan, index) => (
-                  <Card key={index} className="mb-4 border bg-white hover:shadow-md transition-shadow">
-                    <CardHeader className="pb-2">
+              <TabsContent value="plans" className="mt-4 space-y-4">
+                {activePost?.plans.map((plan, i) => (
+                  <Card key={i} className="border-[#e0e5ce]">
+                    <CardHeader className="pb-3">
                       <div className="flex items-center justify-between">
-                        <div>
-                          <CardTitle className="text-lg">{plan.title}</CardTitle>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="text-sm text-gray-600">By {plan.planner}</span>
-                            <div className="flex items-center gap-1">
-                              <svg className="h-4 w-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                              </svg>
-                              <span className="text-sm font-medium">{plan.rating}</span>
+                        <div className="flex items-center gap-3">
+                          <Avatar>
+                            <AvatarFallback>{plan.planner.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <h3 className="font-semibold">{plan.planner}</h3>
+                            <div className="flex items-center gap-1 text-amber-500">
+                              <span className="text-xs">{plan.rating}</span>
+                              <span className="text-xs">★</span>
                             </div>
                           </div>
                         </div>
-                        <Badge variant="outline" className="bg-[#e0e5ce] text-[#415444] border-0">
+                        <Badge variant="outline" className="border-[#415444] text-[#415444]">
                           {plan.budget}
                         </Badge>
                       </div>
                     </CardHeader>
-                    <CardContent className="pb-2">
-                      <div className="space-y-2">
-                        <p className="text-sm font-medium text-gray-700">Highlights</p>
-                        <div className="flex flex-wrap gap-2">
-                          {plan.highlights.map((highlight, i) => (
-                            <Badge key={i} variant="secondary" className="bg-[#f8f9fa]">
-                              {highlight}
-                            </Badge>
-                          ))}
-                        </div>
+                    <CardContent className="pb-3">
+                      <h4 className="mb-2 text-lg font-medium">{plan.title}</h4>
+                      <div className="mb-4 space-y-1">
+                        {plan.highlights.map((highlight, j) => (
+                          <div key={j} className="flex items-center gap-2 text-sm">
+                            <Check className="h-4 w-4 text-[#415444]" />
+                            <span>{highlight}</span>
+                          </div>
+                        ))}
                       </div>
-                    </CardContent>
-                    <CardFooter className="pt-2">
-                      <Button className="w-full bg-[#415444] hover:bg-[#415444]/90">
+                      <Button
+                        className="w-full bg-[#415444] hover:bg-[#415444]/90"
+                        onClick={() => handleViewFullItinerary(plan)}
+                      >
                         View Full Itinerary
                       </Button>
-                    </CardFooter>
+                    </CardContent>
                   </Card>
                 ))}
               </TabsContent>
-              <TabsContent value="request">
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="grid gap-4">
-                      <div className="grid gap-2">
-                        <Label>What type of plan are you looking for?</Label>
-                        <Select>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select plan type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="budget">Budget-friendly</SelectItem>
-                            <SelectItem value="luxury">Luxury experience</SelectItem>
-                            <SelectItem value="family">Family-friendly</SelectItem>
-                            <SelectItem value="adventure">Adventure-focused</SelectItem>
-                            <SelectItem value="cultural">Cultural immersion</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="grid gap-2">
-                        <Label>Additional preferences</Label>
-                        <Textarea placeholder="Share any specific preferences or requirements for your trip" />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label>Budget range</Label>
-                        <div className="flex items-center gap-2">
-                          <Input placeholder="Min" type="number" className="w-1/2" />
-                          <span>-</span>
-                          <Input placeholder="Max" type="number" className="w-1/2" />
+              <TabsContent value="comments" className="mt-4">
+                <div className="space-y-4">
+                  {(activePost?.comments ?? 0) > 0 ? (
+                    Array.from({ length: 3 }).map((_, i) => (
+                      <div key={i} className="flex gap-3">
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback>U</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-semibold">User {i + 1}</span>
+                            <span className="text-xs text-gray-500">2 days ago</span>
+                          </div>
+                          <p className="mt-1 text-sm text-gray-600">
+                            This is a sample comment. In the actual implementation, real comments would be displayed here.
+                          </p>
                         </div>
                       </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter className="flex justify-between">
-                    <Button variant="outline" onClick={() => setViewPlansDialogOpen(false)}>
-                      Cancel
+                    ))
+                  ) : (
+                    <p className="text-gray-500">No comments yet. Be the first to comment!</p>
+                  )}
+                  <div className="mt-4 flex gap-2">
+                    <Input
+                      placeholder="Add your comment..."
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value)}
+                    />
+                    <Button
+                      className="bg-[#415444] hover:bg-[#415444]/90"
+                      onClick={() => handleAddComment(activePostId || 0)}
+                    >
+                      Post
                     </Button>
-                    <Button className="bg-[#415444] hover:bg-[#415444]/90" onClick={() => {
-                      alert("Request sent! Planners will be notified of your request.");
-                      setViewPlansDialogOpen(false);
-                    }}>
-                      Request Plans
-                    </Button>
-                  </CardFooter>
-                </Card>
+                  </div>
+                </div>
               </TabsContent>
             </Tabs>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Full Itinerary Dialog */}
+      <Dialog open={fullItineraryDialogOpen} onOpenChange={setFullItineraryDialogOpen}>
+        <DialogContent className="sm:max-w-[700px]">
+          <DialogHeader>
+            <DialogTitle>{activeItinerary?.title}</DialogTitle>
+            <DialogDescription className="flex items-center justify-between">
+              <span>Created by {activeItinerary?.planner}</span>
+              <Badge variant="outline" className="border-[#415444] text-[#415444]">
+                {activeItinerary?.budget}
+              </Badge>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="max-h-[60vh] overflow-y-auto pr-2">
+            <div className="space-y-6">
+              {activeItinerary?.fullItinerary?.days.map((day: any, i: number) => (
+                <div key={i} className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-[#e0e5ce] text-[#415444]">Day {day.day}</Badge>
+                    <h4 className="font-medium">{day.title}</h4>
+                  </div>
+                  <ul className="ml-6 list-disc space-y-1 text-gray-600">
+                    {day.activities.map((activity: string, j: number) => (
+                      <li key={j}>{activity}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex justify-end gap-4">
+            <Button variant="outline">Save Itinerary</Button>
+            <Button
+              className="bg-[#415444] hover:bg-[#415444]/90"
+              onClick={() => handleConnectWithPlanner(activeItinerary?.planner)}
+            >
+              Connect with Planner
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -956,55 +1331,99 @@ export default function ExplorePage() {
           <DialogHeader>
             <DialogTitle>Top Travel Planners</DialogTitle>
             <DialogDescription>
-              Discover experienced travel planners and their specialties
+              Connect with verified travel planners to create custom itineraries.
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-4 grid gap-4 max-h-[400px] overflow-y-auto">
-            {topPlanners.map((planner, index) => (
-              <Card key={index} className="hover:shadow-md transition-shadow">
-                <CardContent className="py-4">
-                  <div className="flex items-start gap-4">
-                    <Avatar className="h-12 w-12">
-                      <AvatarImage src={planner.avatar || "/placeholder.svg"} alt={planner.name} />
-                      <AvatarFallback>{planner.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold">{planner.name}</h3>
-                        <div className="flex items-center gap-1">
-                          <svg className="h-4 w-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                          <span className="text-sm font-medium">{planner.rating}</span>
-                          <span className="text-sm text-gray-600">({planner.plans} plans)</span>
+          <div className="max-h-[60vh] overflow-y-auto pr-2">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {topPlanners.map((planner, i) => (
+                <Card key={i} className="border-[#e0e5ce]">
+                  <CardContent className="p-4">
+                    <div className="flex items-start gap-3">
+                      <Avatar className="h-12 w-12">
+                        <AvatarImage src={planner.avatar} alt={planner.name} />
+                        <AvatarFallback>{planner.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-semibold">{planner.name}</h3>
+                          <div className="flex items-center gap-1 text-amber-500">
+                            <span>{planner.rating}</span>
+                            <span>★</span>
+                          </div>
                         </div>
-                      </div>
-                      <p className="mt-1 text-sm text-gray-600">{planner.bio}</p>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {planner.specialties.map((specialty, i) => (
-                          <Badge key={i} variant="secondary" className="bg-[#f8f9fa]">
-                            {specialty}
-                          </Badge>
-                        ))}
+                        <p className="mt-1 text-xs text-gray-500">{planner.plans} plans created</p>
+                        <div className="mt-2 flex flex-wrap gap-1">
+                          {planner.specialties.map((specialty, j) => (
+                            <Badge key={j} variant="outline" className="border-[#415444]/30 text-xs text-[#415444]">
+                              {specialty}
+                            </Badge>
+                          ))}
+                        </div>
+                        <p className="mt-2 text-sm text-gray-600">{planner.bio}</p>
+                        <Button className="mt-3 w-full bg-[#415444] hover:bg-[#415444]/90">Connect</Button>
                       </div>
                     </div>
-                  </div>
-                </CardContent>
-                <CardFooter className="border-t bg-[#f8f9fa] py-2">
-                  <div className="flex w-full justify-end gap-2">
-                    <Button variant="outline" size="sm">
-                      See Plans
-                    </Button>
-                    <Button size="sm" className="bg-[#415444] hover:bg-[#415444]/90">
-                      Contact Planner
-                    </Button>
-                  </div>
-                </CardFooter>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </DialogContent>
       </Dialog>
-    </>
-  )
+          {/* Connect With Planner Dialog */}
+      <Dialog open={connectPlannerDialogOpen} onOpenChange={setConnectPlannerDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Connect with {activePlanner}</DialogTitle>
+            <DialogDescription>
+              Send a message to start planning your perfect trip.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="message">Your Message</Label>
+              <Textarea
+                id="message"
+                placeholder="Hi! I'm interested in your travel plan. Can you help customize it for my needs?"
+                rows={4}
+                value={plannerMessageText}
+                onChange={(e) => setPlannerMessageText(e.target.value)}
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <Checkbox id="share-contact" />
+              <Label htmlFor="share-contact" className="text-sm">
+                Share my contact information with this planner
+              </Label>
+            </div>
+          </div>
+          <div className="flex justify-end gap-4">
+            <Button variant="outline" onClick={() => setConnectPlannerDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              className="bg-[#415444] hover:bg-[#415444]/90"
+              onClick={handleSendPlannerMessage}
+            >
+              Send Message
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+          {/* Success Toast */}
+          <Toast open={toastOpen} onOpenChange={setToastOpen}>
+            <div className="grid gap-1">
+              {toastMessage.title && (
+                <div className="font-semibold">{toastMessage.title}</div>
+              )}
+              {toastMessage.description && (
+                <div className="text-sm opacity-90">{toastMessage.description}</div>
+              )}
+            </div>
+          </Toast>
+        </>
+  );
 }
+

@@ -110,12 +110,16 @@ export default function HomePage() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.6, duration: 0.8 }}
                 >
-                  <Button className="bg-[#415444] hover:bg-[#415444]/90 text-lg px-8 py-6" onClick={handleGetStarted}>
+                  <Button
+                    variant="default"
+                    className="bg-[#415444] text-white hover:bg-[#415444]/90 text-lg px-8 py-6"
+                    onClick={handleGetStarted}
+                  >
                     Get Started
                   </Button>
                   <Button
                     variant="outline"
-                    className="border-2 border-white bg-black text-white hover:bg-black/80 text-lg px-8 py-6"
+                    className="border-2 border-[#415444] bg-transparent text-white hover:bg-[#415444]/20 text-lg px-8 py-6"
                     onClick={handleConnectWallet}
                   >
                     {walletConnected ? `Disconnect (${walletAddress.slice(0, 6)}...)` : "Connect Wallet"}
@@ -163,7 +167,7 @@ export default function HomePage() {
                     title: "Post a Travel Need",
                     description:
                       '"I\'m going to Japan in July. Budget: $1,500. Interested in food, culture, and anime."',
-                    image: "https://images.unsplash.com/photo-1528360983277-13d401cdc186?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
                   },
                   {
                     step: 2,
@@ -299,7 +303,7 @@ export default function HomePage() {
                         ),
                         title: "$PLAN Token",
                         description: "Used for bookings, rewards, tipping, and voting in the DAO.",
-                        image: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                        image: "https://images.unsplash.com/photo-1605792657660-596af9009e82?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
                       },
                       {
                         icon: (

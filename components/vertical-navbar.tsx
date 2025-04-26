@@ -51,11 +51,11 @@ export function VerticalNavbar(): JSX.Element {
   }
 
   const navItems: NavItem[] = [
-    { name: "Home", icon: <Home className={cn(expanded ? "h-5 w-5" : "h-6 w-6")} />, href: "/" },
-    { name: "Explore", icon: <Compass className={cn(expanded ? "h-5 w-5" : "h-6 w-6")} />, href: "/explore" },
-    { name: "Messages", icon: <MessageSquare className={cn(expanded ? "h-5 w-5" : "h-6 w-6")} />, href: "/messages" },
-    { name: "Profile", icon: <User className={cn(expanded ? "h-5 w-5" : "h-6 w-6")} />, href: "/profile" },
-    { name: "Settings", icon: <Settings className={cn(expanded ? "h-5 w-5" : "h-6 w-6")} />, href: "/settings" },
+    { name: "Home", icon: <Home className={cn(expanded ? "h-5 w-5" : "h-7 w-7")} />, href: "/" },
+    { name: "Explore", icon: <Compass className={cn(expanded ? "h-5 w-5" : "h-7 w-7")} />, href: "/explore" },
+    { name: "Messages", icon: <MessageSquare className={cn(expanded ? "h-5 w-5" : "h-7 w-7")} />, href: "/messages" },
+    { name: "Profile", icon: <User className={cn(expanded ? "h-5 w-5" : "h-7 w-7")} />, href: "/profile" },
+    { name: "Settings", icon: <Settings className={cn(expanded ? "h-5 w-5" : "h-7 w-7")} />, href: "/settings" },
   ]
 
   return (
@@ -114,7 +114,7 @@ export function VerticalNavbar(): JSX.Element {
                     className={cn(
                       "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
                       isActive ? "bg-[#e0e5ce] text-[#415444]" : "text-gray-500 hover:bg-gray-100 hover:text-gray-900",
-                      !expanded && "justify-center"
+                      !expanded && "justify-center py-3" // Added more padding when collapsed
                     )}
                     whileHover={{ x: 5 }}
                     transition={{ type: "spring", stiffness: 300 }}
