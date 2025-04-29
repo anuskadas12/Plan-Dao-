@@ -1,20 +1,29 @@
-import type { Metadata } from 'next'
-import './globals.css'
+
+// app/layout.tsx
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+
+import { headers } from "next/headers"; // added
+import ContextProvider from './context'; // updated import path
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
-}
+  title: "AppKit Example App",
+  description: "Powered by WalletConnect"
+};
 
-export default function RootLayout({
-  children,
+export default async function RootLayout({
+  children
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const cookies = (await headers()).get('cookie')
+
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ContextProvider cookies={cookies}>{children}</ContextProvider>
+      </body>
     </html>
   )
 }

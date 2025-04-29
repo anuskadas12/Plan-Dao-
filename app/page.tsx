@@ -117,13 +117,13 @@ export default function HomePage() {
                   >
                     Get Started
                   </Button>
-                  <Button
+                  {/* <Button
                     variant="outline"
                     className="border-2 border-[#415444] bg-transparent text-white hover:bg-[#415444]/20 text-lg px-8 py-6"
                     onClick={handleConnectWallet}
                   >
                     {walletConnected ? `Disconnect (${walletAddress.slice(0, 6)}...)` : "Connect Wallet"}
-                  </Button>
+                  </Button> */}
                 </motion.div>
               </motion.div>
 
