@@ -129,7 +129,7 @@ export function VerticalNavbar(): JSX.Element {
             })}
           </nav>
 
-          <w3m-button balance="hide"/>
+          <appkit-button />
         </div>
       </motion.aside>
 
