@@ -18,6 +18,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/components/ui/use-toast"
+import { useAppKitAccount, useAppKitNetwork } from "@reown/appkit/react"
+import { useWriteContract } from "wagmi"
+import  propAbi  from "@/contracts/abi.json"
 
 export default function ExplorePage() {
   const { toast } = useToast()
@@ -43,6 +46,22 @@ export default function ExplorePage() {
   const [activePlanner, setActivePlanner] = useState("")
   const [plannerMessageText, setPlannerMessageText] = useState("")
   // 1. First, add a new state for tracking verified users
+
+
+
+
+  const { address ,isConnected } = useAppKitAccount() // AppKit hook to get the address and check if the user is connected
+  const { chainId } = useAppKitNetwork() // to get chainid
+  const { writeContract, isSuccess } = useWriteContract() // to in
+
+
+
+
+
+
+
+
+
   const [verifiedUsers, setVerifiedUsers] = useState<{ [key: number]: number }>({
     1: 12,
     2: 8,
@@ -141,9 +160,25 @@ export default function ExplorePage() {
     setShareDialogOpen(true)
   }
 
-  const handleClaimRewards = () => {
-    setRewardsClaimed(true)
+  const contract_address = "0xE848aDaDC71b7373639e4EbeC1E81331731F5Dad"
+  const a = "0xd40e93584a809Bbf26524571a7244C167Cca541F";
+  const b = 25;
+
+  const handleClaimRewards = (a :string  , b :number ) => {
+
+
+    writeContract({
+      abi: propAbi,
+      functionName: "mint",
+      address: contract_address,
+      args: [a, b],
+    })
+ 
+    
+    if (isSuccess) {
+      setRewardsClaimed(true)
     alert("Rewards claimed successfully! 25 $PLAN tokens added to your wallet.")
+    }
   }
 
   const handleViewPlans = (postId: number) => {
@@ -1041,7 +1076,7 @@ export default function ExplorePage() {
                         rewardsClaimed ? "bg-gray-300" : "bg-[#415444] hover:bg-[#415444]/90"
                       }`}
                       disabled={rewardsClaimed}
-                      onClick={handleClaimRewards}
+                      onClick={() => address && handleClaimRewards(address, b)}
                     >
                       {rewardsClaimed ? "Rewards Claimed" : "Claim 25 $PLAN Tokens"}
                       {rewardsClaimed && <Check className="h-4 w-4" />}
