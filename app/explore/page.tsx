@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { CalendarDays, Clock, Gift, Heart, MapPin, MessageSquare, Plus, Share2, User, Check, X } from "lucide-react"
+import { motion } from "framer-motion"
+import { CalendarDays, Gift, Heart, MapPin, Plus, Share2, User, Check, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,19 +11,16 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Separator } from "@/components/ui/separator"
 import { VerticalNavbar } from "@/components/vertical-navbar"
 import { CustomCursor } from "@/components/custom-cursor"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { toast } from "@/components/ui/use-toast"
-import { ToastAction } from "@/components/ui/toast"
-import { Toast } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/use-toast"
 
 export default function ExplorePage() {
+  const { toast } = useToast()
   const [walletConnected, setWalletConnected] = useState(false)
   const [walletAddress, setWalletAddress] = useState("0x1234...5678")
   const [postDialogOpen, setPostDialogOpen] = useState(false)
@@ -45,16 +42,39 @@ export default function ExplorePage() {
   const [connectPlannerDialogOpen, setConnectPlannerDialogOpen] = useState(false)
   const [activePlanner, setActivePlanner] = useState("")
   const [plannerMessageText, setPlannerMessageText] = useState("")
-  const [toastOpen, setToastOpen] = useState(false)
-  const [toastMessage, setToastMessage] = useState({ title: "", description: "" })
+  // 1. First, add a new state for tracking verified users
+  const [verifiedUsers, setVerifiedUsers] = useState<{ [key: number]: number }>({
+    1: 12,
+    2: 8,
+    3: 3,
+    4: 15,
+  })
+  const [userVoted, setUserVoted] = useState<{ [key: number]: boolean | null }>({})
+
+  // 2. Add a function to handle voting
+  const handleVote = (postId: number, satisfied: boolean) => {
+    setUserVoted({ ...userVoted, [postId]: satisfied })
+
+    if (satisfied) {
+      // Update verified count when user votes "Yes"
+      setVerifiedUsers({
+        ...verifiedUsers,
+        [postId]: (verifiedUsers[postId] || 0) + 1,
+      })
+
+      toast({
+        title: "Plan Verified",
+        description: "Thank you for verifying this travel plan!",
+      })
+    }
+  }
 
   const handleSendPlannerMessage = () => {
     setConnectPlannerDialogOpen(false)
-    setToastMessage({
+    toast({
       title: "Message Sent",
-      description: `Your message has been sent to ${activePlanner}.`
+      description: `Your message has been sent to ${activePlanner}.`,
     })
-    setToastOpen(true)
   }
 
   const handleConnectWallet = () => {
@@ -77,7 +97,7 @@ export default function ExplorePage() {
     // Open token confirmation dialog
     setTokenConfirmDialogOpen(true)
   }
-  
+
   const handleConfirmPostSubmission = () => {
     // Create a new post and add it to the travelPosts array
     const newPost = {
@@ -97,13 +117,13 @@ export default function ExplorePage() {
       responses: 0,
       timePosted: "Just now",
       liked: false,
-      plans: []
+      plans: [],
     }
 
     setTravelPosts([newPost, ...travelPosts])
     setTokenConfirmDialogOpen(false)
     setPostDialogOpen(false)
-    
+
     // Reset form
     setDestination("")
     setBudget("")
@@ -111,7 +131,7 @@ export default function ExplorePage() {
     setEndDate("")
     setSelectedInterests([])
     setDescription("")
-    
+
     // Show success toast
     alert("Travel need posted successfully!")
   }
@@ -143,34 +163,34 @@ export default function ExplorePage() {
 
   const handleAddComment = (postId: number) => {
     if (!commentText.trim()) return
-    
-    const updatedPosts = travelPosts.map(post => {
+
+    const updatedPosts = travelPosts.map((post) => {
       if (post.id === postId) {
         return {
           ...post,
-          comments: post.comments + 1
+          comments: post.comments + 1,
         }
       }
       return post
     })
-    
+
     setTravelPosts(updatedPosts)
     setCommentText("")
     alert("Comment added successfully!")
   }
 
   const handleLikePost = (postId: number) => {
-    const updatedPosts = travelPosts.map(post => {
+    const updatedPosts = travelPosts.map((post) => {
       if (post.id === postId) {
         return {
           ...post,
           likes: post.likes + 1,
-          liked: true
+          liked: true,
         }
       }
       return post
     })
-    
+
     setTravelPosts(updatedPosts)
   }
 
@@ -208,8 +228,8 @@ export default function ExplorePage() {
                 activities: [
                   "Airport pickup and transfer to hotel in Shinjuku",
                   "Evening walk through Shinjuku's neon districts",
-                  "Welcome dinner at local izakaya"
-                ]
+                  "Welcome dinner at local izakaya",
+                ],
               },
               {
                 day: 2,
@@ -217,8 +237,8 @@ export default function ExplorePage() {
                 activities: [
                   "Early morning visit to Tsukiji Outer Market",
                   "Sushi making workshop",
-                  "Afternoon visit to Meiji Shrine"
-                ]
+                  "Afternoon visit to Meiji Shrine",
+                ],
               },
               {
                 day: 3,
@@ -226,11 +246,11 @@ export default function ExplorePage() {
                 activities: [
                   "Morning visit to Ghibli Museum",
                   "Explore Akihabara Electric Town",
-                  "Maid cafe experience"
-                ]
-              }
-            ]
-          }
+                  "Maid cafe experience",
+                ],
+              },
+            ],
+          },
         },
         {
           planner: "Michael Chen",
@@ -246,8 +266,8 @@ export default function ExplorePage() {
                 activities: [
                   "Check-in at anime-themed hotel in Ikebukuro",
                   "Visit Sunshine City Pokemon Center",
-                  "Dinner at themed restaurant"
-                ]
+                  "Dinner at themed restaurant",
+                ],
               },
               {
                 day: 2,
@@ -255,8 +275,8 @@ export default function ExplorePage() {
                 activities: [
                   "Full day in Akihabara with private guide",
                   "Anime merchandise shopping",
-                  "Maid cafe lunch experience"
-                ]
+                  "Maid cafe lunch experience",
+                ],
               },
               {
                 day: 3,
@@ -264,11 +284,11 @@ export default function ExplorePage() {
                 activities: [
                   "TeamLab Borderless digital art museum",
                   "Odaiba entertainment district",
-                  "Tokyo skyline views from Mori Tower"
-                ]
-              }
-            ]
-          }
+                  "Tokyo skyline views from Mori Tower",
+                ],
+              },
+            ],
+          },
         },
         {
           planner: "Sophia Rodriguez",
@@ -284,17 +304,13 @@ export default function ExplorePage() {
                 activities: [
                   "Morning visit to Asakusa & Senso-ji Temple",
                   "Traditional tea ceremony experience",
-                  "Japanese calligraphy class"
-                ]
+                  "Japanese calligraphy class",
+                ],
               },
               {
                 day: 2,
                 title: "Mt. Fuji Adventure",
-                activities: [
-                  "Full day trip to Mt. Fuji area",
-                  "Lake Kawaguchi scenic spots",
-                  "Hot spring experience"
-                ]
+                activities: ["Full day trip to Mt. Fuji area", "Lake Kawaguchi scenic spots", "Hot spring experience"],
               },
               {
                 day: 3,
@@ -302,13 +318,13 @@ export default function ExplorePage() {
                 activities: [
                   "Bullet train to Kyoto",
                   "Fushimi Inari shrine visit",
-                  "Afternoon with Nara's friendly deer"
-                ]
-              }
-            ]
-          }
-        }
-      ]
+                  "Afternoon with Nara's friendly deer",
+                ],
+              },
+            ],
+          },
+        },
+      ],
     },
     {
       id: 2,
@@ -343,8 +359,8 @@ export default function ExplorePage() {
                 activities: [
                   "Private airport transfer to luxury hotel near Spanish Steps",
                   "Evening walking tour of illuminated Rome",
-                  "Romantic dinner in Trastevere"
-                ]
+                  "Romantic dinner in Trastevere",
+                ],
               },
               {
                 day: 2,
@@ -352,8 +368,8 @@ export default function ExplorePage() {
                 activities: [
                   "Early access Vatican Museums & Sistine Chapel tour",
                   "Lunch at rooftop restaurant with city views",
-                  "Sunset Colosseum and Forum private tour"
-                ]
+                  "Sunset Colosseum and Forum private tour",
+                ],
               },
               {
                 day: 3,
@@ -361,11 +377,11 @@ export default function ExplorePage() {
                 activities: [
                   "First class train to Florence",
                   "Skip-the-line Uffizi Gallery tour",
-                  "Evening cooking class with local chef"
-                ]
-              }
-            ]
-          }
+                  "Evening cooking class with local chef",
+                ],
+              },
+            ],
+          },
         },
         {
           planner: "David Kim",
@@ -381,8 +397,8 @@ export default function ExplorePage() {
                 activities: [
                   "Off-the-beaten-path Rome walking tour",
                   "Secret passages of Castel Sant'Angelo",
-                  "Dinner at historic restaurant"
-                ]
+                  "Dinner at historic restaurant",
+                ],
               },
               {
                 day: 2,
@@ -390,8 +406,8 @@ export default function ExplorePage() {
                 activities: [
                   "Early morning Duomo climb",
                   "Extended Uffizi Gallery art tour with expert",
-                  "Artisan workshop visit in Oltrarno district"
-                ]
+                  "Artisan workshop visit in Oltrarno district",
+                ],
               },
               {
                 day: 3,
@@ -399,13 +415,13 @@ export default function ExplorePage() {
                 activities: [
                   "Traditional Venetian mask-making workshop",
                   "Private art collection visits",
-                  "Exclusive after-hours Doge's Palace tour"
-                ]
-              }
-            ]
-          }
-        }
-      ]
+                  "Exclusive after-hours Doge's Palace tour",
+                ],
+              },
+            ],
+          },
+        },
+      ],
     },
     {
       id: 3,
@@ -440,8 +456,8 @@ export default function ExplorePage() {
                 activities: [
                   "Check in at trendy hostel in Bangkok",
                   "Street food tour in Chinatown",
-                  "Khao San Road party experience"
-                ]
+                  "Khao San Road party experience",
+                ],
               },
               {
                 day: 2,
@@ -449,8 +465,8 @@ export default function ExplorePage() {
                 activities: [
                   "Flight to Koh Samui and boat to Koh Phangan",
                   "Beach relaxation and snorkeling",
-                  "Legendary Full Moon Party (or Half Moon if dates don't align)"
-                ]
+                  "Legendary Full Moon Party (or Half Moon if dates don't align)",
+                ],
               },
               {
                 day: 3,
@@ -458,11 +474,11 @@ export default function ExplorePage() {
                 activities: [
                   "Exclusive beach camping experience",
                   "Local fishing village visit",
-                  "Sunset BBQ with fresh seafood"
-                ]
-              }
-            ]
-          }
+                  "Sunset BBQ with fresh seafood",
+                ],
+              },
+            ],
+          },
         },
         {
           planner: "Michael Chen",
@@ -478,8 +494,8 @@ export default function ExplorePage() {
                 activities: [
                   "Local homestay in traditional northern Thai house",
                   "Thai cooking class with market visit",
-                  "Evening street food crawl and night market"
-                ]
+                  "Evening street food crawl and night market",
+                ],
               },
               {
                 day: 2,
@@ -487,8 +503,8 @@ export default function ExplorePage() {
                 activities: [
                   "Hidden waterfall trek with local guide",
                   "Natural hot springs visit",
-                  "Traditional Khan Toke dinner"
-                ]
+                  "Traditional Khan Toke dinner",
+                ],
               },
               {
                 day: 3,
@@ -496,13 +512,13 @@ export default function ExplorePage() {
                 activities: [
                   "Transfer to quieter Koh Lanta",
                   "Kayaking in mangrove forests",
-                  "Sunset beach BBQ with local musicians"
-                ]
-              }
-            ]
-          }
-        }
-      ]
+                  "Sunset beach BBQ with local musicians",
+                ],
+              },
+            ],
+          },
+        },
+      ],
     },
     {
       id: 4,
@@ -537,8 +553,8 @@ export default function ExplorePage() {
                 activities: [
                   "Airport pickup in 4x4 vehicle",
                   "Blue Lagoon VIP entrance with private changing room",
-                  "Northern Lights evening hunt with photographer"
-                ]
+                  "Northern Lights evening hunt with photographer",
+                ],
               },
               {
                 day: 2,
@@ -546,8 +562,8 @@ export default function ExplorePage() {
                 activities: [
                   "Seljalandsfoss and Skógafoss waterfalls",
                   "Black beach at Reynisfjara",
-                  "Ice cave exploration with specialist equipment"
-                ]
+                  "Ice cave exploration with specialist equipment",
+                ],
               },
               {
                 day: 3,
@@ -555,11 +571,11 @@ export default function ExplorePage() {
                 activities: [
                   "Þingvellir National Park tectonic plates",
                   "Geysir and Gullfoss waterfall",
-                  "Secret Lagoon hot spring with floating experience"
-                ]
-              }
-            ]
-          }
+                  "Secret Lagoon hot spring with floating experience",
+                ],
+              },
+            ],
+          },
         },
         {
           planner: "Michael Chen",
@@ -575,8 +591,8 @@ export default function ExplorePage() {
                 activities: [
                   "Þingvellir National Park with hidden waterfall spot",
                   "Extended visit to Geysir geothermal area",
-                  "Overnight in transparent bubble hotel for Northern Lights"
-                ]
+                  "Overnight in transparent bubble hotel for Northern Lights",
+                ],
               },
               {
                 day: 2,
@@ -584,8 +600,8 @@ export default function ExplorePage() {
                 activities: [
                   "Full day glacier hike expedition with all equipment",
                   "Ice climbing intro for beginners",
-                  "Hot chocolate by glacier lagoon"
-                ]
+                  "Hot chocolate by glacier lagoon",
+                ],
               },
               {
                 day: 3,
@@ -593,11 +609,11 @@ export default function ExplorePage() {
                 activities: [
                   "Secret Lagoon morning relaxation",
                   "Off-road adventure to hidden hot springs",
-                  "Traditional Icelandic lamb dinner"
-                ]
-              }
-            ]
-          }
+                  "Traditional Icelandic lamb dinner",
+                ],
+              },
+            ],
+          },
         },
         {
           planner: "David Kim",
@@ -613,8 +629,8 @@ export default function ExplorePage() {
                 activities: [
                   "Winter driving course with experienced instructor",
                   "Snowmobile tour on glacier",
-                  "Evening at local hot pot with Icelandic beer tasting"
-                ]
+                  "Evening at local hot pot with Icelandic beer tasting",
+                ],
               },
               {
                 day: 2,
@@ -622,8 +638,8 @@ export default function ExplorePage() {
                 activities: [
                   "Self-drive with prepared GPS coordinates",
                   "Hidden waterfalls accessible only by 4x4",
-                  "Northern Lights photography workshop"
-                ]
+                  "Northern Lights photography workshop",
+                ],
               },
               {
                 day: 3,
@@ -631,13 +647,13 @@ export default function ExplorePage() {
                 activities: [
                   "Guided tour of multiple natural hot springs",
                   "Traditional Icelandic farm visit",
-                  "Farewell dinner in revolving restaurant"
-                ]
-              }
-            ]
-          }
-        }
-      ]
+                  "Farewell dinner in revolving restaurant",
+                ],
+              },
+            ],
+          },
+        },
+      ],
     },
   ])
 
@@ -648,7 +664,7 @@ export default function ExplorePage() {
       rating: 4.9,
       plans: 124,
       specialties: ["Europe", "Luxury", "Cultural"],
-      bio: "Professional travel planner with 8 years of experience. Specializes in custom European itineraries with a focus on cultural immersion and unique experiences."
+      bio: "Professional travel planner with 8 years of experience. Specializes in custom European itineraries with a focus on cultural immersion and unique experiences.",
     },
     {
       name: "Michael Chen",
@@ -656,7 +672,7 @@ export default function ExplorePage() {
       rating: 4.8,
       plans: 98,
       specialties: ["Asia", "Budget", "Food"],
-      bio: "Food and travel blogger turned planner. Expert in Asian destinations with insider knowledge of the best local eateries and hidden gems."
+      bio: "Food and travel blogger turned planner. Expert in Asian destinations with insider knowledge of the best local eateries and hidden gems.",
     },
     {
       name: "Sophia Rodriguez",
@@ -664,7 +680,7 @@ export default function ExplorePage() {
       rating: 4.7,
       plans: 87,
       specialties: ["Adventure", "Beaches", "Solo Travel"],
-      bio: "Adventure travel specialist with experience in over 50 countries. Creates unique, off-the-beaten-path itineraries for thrill-seekers."
+      bio: "Adventure travel specialist with experience in over 50 countries. Creates unique, off-the-beaten-path itineraries for thrill-seekers.",
     },
     {
       name: "David Kim",
@@ -672,7 +688,7 @@ export default function ExplorePage() {
       rating: 4.6,
       plans: 76,
       specialties: ["Family", "Nature", "Photography"],
-      bio: "Family travel expert and professional photographer. Designs itineraries that balance kid-friendly activities with breathtaking photo opportunities."
+      bio: "Family travel expert and professional photographer. Designs itineraries that balance kid-friendly activities with breathtaking photo opportunities.",
     },
     {
       name: "Olivia Martinez",
@@ -680,7 +696,7 @@ export default function ExplorePage() {
       rating: 4.8,
       plans: 92,
       specialties: ["Honeymoon", "Islands", "Wellness"],
-      bio: "Specializes in romantic getaways and wellness retreats. Known for creating personalized experiences that combine luxury and authentic local culture."
+      bio: "Specializes in romantic getaways and wellness retreats. Known for creating personalized experiences that combine luxury and authentic local culture.",
     },
     {
       name: "James Wilson",
@@ -688,11 +704,11 @@ export default function ExplorePage() {
       rating: 4.5,
       plans: 65,
       specialties: ["Road Trips", "National Parks", "Hiking"],
-      bio: "Outdoor enthusiast and former park ranger. Expert in planning detailed road trips and hiking adventures across national parks."
-    }
+      bio: "Outdoor enthusiast and former park ranger. Expert in planning detailed road trips and hiking adventures across national parks.",
+    },
   ]
 
-  const activePost = travelPosts.find(post => post.id === activePostId)
+  const activePost = travelPosts.find((post) => post.id === activePostId)
 
   return (
     <>
@@ -761,18 +777,18 @@ export default function ExplorePage() {
                       <div className="grid grid-cols-2 gap-4">
                         <div className="grid gap-2">
                           <Label htmlFor="destination">Destination</Label>
-                          <Input 
-                            id="destination" 
-                            placeholder="e.g., Japan, Italy, Thailand" 
+                          <Input
+                            id="destination"
+                            placeholder="e.g., Japan, Italy, Thailand"
                             value={destination}
                             onChange={(e) => setDestination(e.target.value)}
                           />
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="budget">Budget</Label>
-                          <Input 
-                            id="budget" 
-                            placeholder="e.g., $1,500" 
+                          <Input
+                            id="budget"
+                            placeholder="e.g., $1,500"
                             value={budget}
                             onChange={(e) => setBudget(e.target.value)}
                           />
@@ -781,18 +797,18 @@ export default function ExplorePage() {
                       <div className="grid grid-cols-2 gap-4">
                         <div className="grid gap-2">
                           <Label htmlFor="start-date">Start Date</Label>
-                          <Input 
-                            id="start-date" 
-                            type="date" 
+                          <Input
+                            id="start-date"
+                            type="date"
                             value={startDate}
                             onChange={(e) => setStartDate(e.target.value)}
                           />
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="end-date">End Date</Label>
-                          <Input 
-                            id="end-date" 
-                            type="date" 
+                          <Input
+                            id="end-date"
+                            type="date"
                             value={endDate}
                             onChange={(e) => setEndDate(e.target.value)}
                           />
@@ -823,7 +839,9 @@ export default function ExplorePage() {
                                 variant="ghost"
                                 size="sm"
                                 className="h-4 w-4 p-0"
-                                onClick={() => setSelectedInterests(selectedInterests.filter((_, index) => index !== i))}
+                                onClick={() =>
+                                  setSelectedInterests(selectedInterests.filter((_, index) => index !== i))
+                                }
                               >
                                 <X className="h-3 w-3" />
                               </Button>
@@ -899,14 +917,17 @@ export default function ExplorePage() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <Avatar>
-                            <AvatarImage src={post.user.avatar} alt={post.user.name} />
+                            <AvatarImage src={post.user.avatar || "/placeholder.svg"} alt={post.user.name} />
                             <AvatarFallback>{post.user.name.charAt(0)}</AvatarFallback>
                           </Avatar>
                           <div>
                             <div className="flex items-center gap-2">
                               <h3 className="font-semibold">{post.user.name}</h3>
                               {post.user.verified && (
-                                <Badge variant="outline" className="rounded-full border-[#415444] px-2 py-0 text-xs text-[#415444]">
+                                <Badge
+                                  variant="outline"
+                                  className="rounded-full border-[#415444] px-2 py-0 text-xs text-[#415444]"
+                                >
                                   <Check className="mr-1 h-3 w-3" />
                                   Verified
                                 </Badge>
@@ -944,21 +965,26 @@ export default function ExplorePage() {
                       </div>
                       <p className="text-gray-600">{post.description}</p>
                     </CardContent>
+
                     <CardFooter className="flex items-center justify-between border-t border-[#e0e5ce] pt-3">
-                      <div className="flex items-center gap-6">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className={`flex items-center gap-1 p-0 ${post.liked ? "text-red-500" : "text-gray-500"}`}
-                          onClick={() => handleLikePost(post.id)}
-                        >
-                          <Heart className={`h-4 w-4 ${post.liked ? "fill-current" : ""}`} />
-                          <span>{post.likes}</span>
-                        </Button>
-                        <Button variant="ghost" size="sm" className="flex items-center gap-1 p-0 text-gray-500">
-                          <MessageSquare className="h-4 w-4" />
-                          <span>{post.comments}</span>
-                        </Button>
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5 text-[#415444]">
+                          {verifiedUsers[post.id] > 0 ? (
+                            <>
+                              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#e0e5ce]">
+                                <Check className="h-3.5 w-3.5" />
+                              </div>
+                              <span className="text-sm font-medium">
+                                {verifiedUsers[post.id]} {verifiedUsers[post.id] === 1 ? "person" : "people"} verified
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <User className="h-4 w-4 text-gray-400" />
+                              <span className="text-sm text-gray-500">No verifications yet</span>
+                            </>
+                          )}
+                        </div>
                       </div>
                       <Button
                         variant="outline"
@@ -1034,7 +1060,7 @@ export default function ExplorePage() {
                         <div key={i} className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <Avatar>
-                              <AvatarImage src={planner.avatar} alt={planner.name} />
+                              <AvatarImage src={planner.avatar || "/placeholder.svg"} alt={planner.name} />
                               <AvatarFallback>{planner.name.charAt(0)}</AvatarFallback>
                             </Avatar>
                             <div>
@@ -1119,9 +1145,7 @@ export default function ExplorePage() {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Share Travel Need</DialogTitle>
-            <DialogDescription>
-              Share this travel need with friends or on social media.
-            </DialogDescription>
+            <DialogDescription>Share this travel need with friends or on social media.</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="flex flex-col gap-4">
@@ -1190,15 +1214,13 @@ export default function ExplorePage() {
         <DialogContent className="sm:max-w-[700px]">
           <DialogHeader>
             <DialogTitle>Travel Plans for {activePost?.destination}</DialogTitle>
-            <DialogDescription>
-              Compare custom itineraries created by verified travel planners.
-            </DialogDescription>
+            <DialogDescription>Compare custom itineraries created by verified travel planners.</DialogDescription>
           </DialogHeader>
           <div className="max-h-[60vh] overflow-y-auto pr-2">
             <Tabs defaultValue="plans" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="plans">Travel Plans ({activePost?.plans.length || 0})</TabsTrigger>
-                <TabsTrigger value="comments">Comments ({activePost?.comments || 0})</TabsTrigger>
+                <TabsTrigger value="comments">Verify Plan</TabsTrigger>
               </TabsList>
               <TabsContent value="plans" className="mt-4 space-y-4">
                 {activePost?.plans.map((plan, i) => (
@@ -1242,41 +1264,66 @@ export default function ExplorePage() {
                   </Card>
                 ))}
               </TabsContent>
+
               <TabsContent value="comments" className="mt-4">
                 <div className="space-y-4">
-                  {(activePost?.comments ?? 0) > 0 ? (
-                    Array.from({ length: 3 }).map((_, i) => (
-                      <div key={i} className="flex gap-3">
-                        <Avatar className="h-8 w-8">
-                          <AvatarFallback>U</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-semibold">User {i + 1}</span>
-                            <span className="text-xs text-gray-500">2 days ago</span>
-                          </div>
-                          <p className="mt-1 text-sm text-gray-600">
-                            This is a sample comment. In the actual implementation, real comments would be displayed here.
-                          </p>
-                        </div>
-                      </div>
-                    ))
+                  {userVoted[activePostId || 0] !== undefined ? (
+                    <Card className="border-[#e0e5ce] bg-[#f8f9f4]">
+                      <CardContent className="flex flex-col items-center justify-center p-6">
+                        {userVoted[activePostId || 0] ? (
+                          <>
+                            <motion.div
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ duration: 0.5 }}
+                              className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#415444]"
+                            >
+                              <Check className="h-10 w-10 text-white" />
+                            </motion.div>
+                            <p className="text-center text-lg font-medium text-[#415444]">
+                              Thank you for verifying this plan!
+                            </p>
+                            <p className="mt-2 text-center text-sm text-gray-500">
+                              Your feedback helps improve our community recommendations.
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f0f0f0]">
+                              <X className="h-10 w-10 text-gray-400" />
+                            </div>
+                            <p className="text-center text-lg font-medium text-gray-700">
+                              We'll work on improving this plan.
+                            </p>
+                            <p className="mt-2 text-center text-sm text-gray-500">Thank you for your feedback.</p>
+                          </>
+                        )}
+                      </CardContent>
+                    </Card>
                   ) : (
-                    <p className="text-gray-500">No comments yet. Be the first to comment!</p>
+                    <Card className="border-[#e0e5ce]">
+                      <CardContent className="p-6">
+                        <h3 className="mb-4 text-center text-lg font-medium">Are you satisfied with this plan?</h3>
+                        <div className="flex justify-center gap-4">
+                          <Button
+                            onClick={() => handleVote(activePostId || 0, true)}
+                            className="bg-[#415444] px-6 hover:bg-[#415444]/90"
+                          >
+                            <Check className="mr-2 h-4 w-4" />
+                            Yes
+                          </Button>
+                          <Button
+                            onClick={() => handleVote(activePostId || 0, false)}
+                            variant="outline"
+                            className="border-[#415444] px-6 text-[#415444] hover:bg-[#415444]/10"
+                          >
+                            <X className="mr-2 h-4 w-4" />
+                            No
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
                   )}
-                  <div className="mt-4 flex gap-2">
-                    <Input
-                      placeholder="Add your comment..."
-                      value={commentText}
-                      onChange={(e) => setCommentText(e.target.value)}
-                    />
-                    <Button
-                      className="bg-[#415444] hover:bg-[#415444]/90"
-                      onClick={() => handleAddComment(activePostId || 0)}
-                    >
-                      Post
-                    </Button>
-                  </div>
                 </div>
               </TabsContent>
             </Tabs>
@@ -1330,9 +1377,7 @@ export default function ExplorePage() {
         <DialogContent className="sm:max-w-[700px]">
           <DialogHeader>
             <DialogTitle>Top Travel Planners</DialogTitle>
-            <DialogDescription>
-              Connect with verified travel planners to create custom itineraries.
-            </DialogDescription>
+            <DialogDescription>Connect with verified travel planners to create custom itineraries.</DialogDescription>
           </DialogHeader>
           <div className="max-h-[60vh] overflow-y-auto pr-2">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -1341,7 +1386,7 @@ export default function ExplorePage() {
                   <CardContent className="p-4">
                     <div className="flex items-start gap-3">
                       <Avatar className="h-12 w-12">
-                        <AvatarImage src={planner.avatar} alt={planner.name} />
+                        <AvatarImage src={planner.avatar || "/placeholder.svg"} alt={planner.name} />
                         <AvatarFallback>{planner.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
@@ -1371,14 +1416,12 @@ export default function ExplorePage() {
           </div>
         </DialogContent>
       </Dialog>
-          {/* Connect With Planner Dialog */}
+      {/* Connect With Planner Dialog */}
       <Dialog open={connectPlannerDialogOpen} onOpenChange={setConnectPlannerDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Connect with {activePlanner}</DialogTitle>
-            <DialogDescription>
-              Send a message to start planning your perfect trip.
-            </DialogDescription>
+            <DialogDescription>Send a message to start planning your perfect trip.</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="flex flex-col gap-2">
@@ -1402,28 +1445,12 @@ export default function ExplorePage() {
             <Button variant="outline" onClick={() => setConnectPlannerDialogOpen(false)}>
               Cancel
             </Button>
-            <Button
-              className="bg-[#415444] hover:bg-[#415444]/90"
-              onClick={handleSendPlannerMessage}
-            >
+            <Button className="bg-[#415444] hover:bg-[#415444]/90" onClick={handleSendPlannerMessage}>
               Send Message
             </Button>
           </div>
         </DialogContent>
       </Dialog>
-
-          {/* Success Toast */}
-          <Toast open={toastOpen} onOpenChange={setToastOpen}>
-            <div className="grid gap-1">
-              {toastMessage.title && (
-                <div className="font-semibold">{toastMessage.title}</div>
-              )}
-              {toastMessage.description && (
-                <div className="text-sm opacity-90">{toastMessage.description}</div>
-              )}
-            </div>
-          </Toast>
-        </>
-  );
+    </>
+  )
 }
-
