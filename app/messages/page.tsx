@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Search, UserPlus, Send, User, Check, X, Bell, Users, Lightbulb, PanelRightOpen } from "lucide-react"
+import { Search, UserPlus, Send, User, Check, X, Bell, Users, Lightbulb, PanelRightOpen, CreditCard, Calendar, MapPin } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -34,6 +34,7 @@ export default function MessagesPage() {
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [loadingSuggestions, setLoadingSuggestions] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(false)
+  const [showTravelPlan, setShowTravelPlan] = useState(false)
 
   // Mock data
   const [contacts, setContacts] = useState([
@@ -105,6 +106,40 @@ export default function MessagesPage() {
     }
   ])
 
+  const [travelPlans, setTravelPlans] = useState([
+    {
+      id: 1,
+      title: "Japan Trip",
+      startDate: "July 15, 2025",
+      endDate: "July 25, 2025",
+      totalCost: 2850,
+      paidAmount: 1500,
+      remainingAmount: 1350,
+      dueDate: "June 1, 2025",
+      locations: ["Tokyo", "Kyoto", "Osaka"],
+      payments: [
+        { date: "Jan 15, 2025", amount: 500, status: "Paid" },
+        { date: "Mar 10, 2025", amount: 1000, status: "Paid" },
+        { date: "Jun 1, 2025", amount: 1350, status: "Pending" }
+      ]
+    },
+    {
+      id: 2,
+      title: "Barcelona Weekend",
+      startDate: "August 5, 2025",
+      endDate: "August 8, 2025",
+      totalCost: 1200,
+      paidAmount: 600,
+      remainingAmount: 600,
+      dueDate: "July 1, 2025",
+      locations: ["Barcelona"],
+      payments: [
+        { date: "Apr 20, 2025", amount: 600, status: "Paid" },
+        { date: "Jul 1, 2025", amount: 600, status: "Pending" }
+      ]
+    }
+  ])
+
   interface Message {
     id: number;
     sender: string;
@@ -129,7 +164,7 @@ export default function MessagesPage() {
       { id: 2, sender: "them", text: "This looks perfect! Thanks for putting this together so quickly.", time: "Yesterday" },
       { id: 3, sender: "them", text: "Thanks for the itinerary!", time: "Yesterday" }
     ],
-    3: [
+    "3": [
       { id: 1, sender: "them", text: "Hi! I'm getting ready for our Greece trip next month.", time: "Wed" },
       { id: 2, sender: "me", text: "That's great! Have you started packing yet?", time: "Wed" },
       { id: 3, sender: "them", text: "Not yet, but I'm making a list. Looking forward to the trip next month", time: "Wed" }
@@ -146,6 +181,16 @@ export default function MessagesPage() {
       clearTimeout(timer)
     }
   }, [])
+
+  useEffect(() => {
+    // Show travel plan panel when specific contacts are selected
+    if (currentChat) {
+      // Show travel plan for Alex Johnson (Japan trip) or Sam Mendez (Barcelona)
+      setShowTravelPlan(currentChat.id === 1 || currentChat.id === 2)
+    } else {
+      setShowTravelPlan(false)
+    }
+  }, [currentChat])
 
   const handleSendMessage = () => {
     if (!messageInput.trim() || !currentChat) return
@@ -260,6 +305,11 @@ export default function MessagesPage() {
     setMessageInput(suggestion);
     setShowSuggestions(false);
   };
+
+  const getCurrentTravelPlan = () => {
+    if (!currentChat) return null;
+    return currentChat.id === 1 ? travelPlans[0] : currentChat.id === 2 ? travelPlans[1] : null;
+  }
 
   if (isLoading) {
     return <LoadingScreen />
@@ -463,159 +513,277 @@ export default function MessagesPage() {
               {currentChat ? (
                 <>
                   {/* Chat Header */}
-                  <div className="flex items-center border-b border-gray-200 bg-white p-4 shadow-sm">
-                    <div className="relative mr-3 h-10 w-10 overflow-hidden rounded-full">
-                      <img
-                        src={currentChat.avatar}
-                        alt={currentChat.name}
-                        className="h-full w-full object-cover"
-                      />
-                      {currentChat.online && (
-                        <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-white"></span>
-                      )}
+                  <div className="flex items-center justify-between border-b border-gray-200 bg-white p-4 shadow-sm">
+                    <div className="flex items-center">
+                      <div className="relative mr-3 h-10 w-10 overflow-hidden rounded-full">
+                        <img
+                          src={currentChat.avatar}
+                          alt={currentChat.name}
+                          className="h-full w-full object-cover"
+                        />
+                        {currentChat.online && (
+                          <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-white"></span>
+                        )}
+                      </div>
+                      <div>
+                        <h2 className="font-medium">{currentChat.name}</h2>
+                        <p className="text-xs text-gray-500">
+                          {currentChat.online ? "Online" : "Offline"}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h2 className="font-medium">{currentChat.name}</h2>
-                      <p className="text-xs text-gray-500">
-                        {currentChat.online ? "Online" : "Offline"}
-                      </p>
-                    </div>
+                    {/* Toggle Travel Plan Button */}
+                    {(currentChat.id === 1 || currentChat.id === 2) && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="bg-[#e0e5ce] border-0 text-[#415444] hover:bg-[#e0e5ce]/80"
+                        onClick={() => setShowTravelPlan(!showTravelPlan)}
+                      >
+                        <PanelRightOpen className="h-4 w-4 mr-1" />
+                        {showTravelPlan ? "Hide" : "Show"} Travel Plan
+                      </Button>
+                    )}
                   </div>
 
-                  {/* Chat Messages */}
-                  <div className="flex-1 overflow-y-auto bg-gray-50 p-4">
-                    <div className="space-y-4">
-                      {conversations[currentChat.id].map((message) => (
-                        <motion.div
-                          key={message.id}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className={`flex ${
-                            message.sender === "me" ? "justify-end" : "justify-start"
-                          }`}
-                        >
-                          <div
-                            className={`max-w-xs rounded-lg p-3 ${
-                              message.sender === "me"
-                                ? "bg-[#415444] text-white"
-                                : "bg-white"
-                            }`}
-                          >
-                            <p>{message.text}</p>
-                            <p
-                              className={`mt-1 text-right text-xs ${
-                                message.sender === "me" ? "text-gray-300" : "text-gray-500"
+                  {/* Chat Area with Flex */}
+                  <div className="flex flex-1">
+                    {/* Chat Messages */}
+                    <div className={`${showTravelPlan ? 'w-2/3' : 'w-full'} flex-col flex overflow-hidden`}>
+                      <div className="flex-1 overflow-y-auto bg-gray-50 p-4">
+                        <div className="space-y-4">
+                          {conversations[currentChat.id].map((message) => (
+                            <motion.div
+                              key={message.id}
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.3 }}
+                              className={`flex ${
+                                message.sender === "me" ? "justify-end" : "justify-start"
                               }`}
                             >
-                              {message.time}
-                            </p>
+                              <div
+                                className={`max-w-xs rounded-lg p-3 ${
+                                  message.sender === "me"
+                                    ? "bg-[#415444] text-white"
+                                    : "bg-white"
+                                }`}
+                              >
+                                <p>{message.text}</p>
+                                <p
+                                  className={`mt-1 text-right text-xs ${
+                                    message.sender === "me" ? "text-gray-300" : "text-gray-500"
+                                  }`}
+                                >
+                                  {message.time}
+                                </p>
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Message Suggestions */}
+                      {showSuggestions && suggestions.length > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="border-t border-gray-200 bg-[#e0e5ce] p-3"
+                        >
+                          <div className="flex items-center mb-2">
+                            <Lightbulb className="mr-2 h-4 w-4 text-[#415444]" />
+                            <h4 className="text-sm font-medium text-gray-700">Suggested responses:</h4>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {suggestions.map((suggestion, index) => (
+                              <Button
+                                key={index}
+                                variant="outline"
+                                size="sm"
+                                className="bg-white border-gray-200 text-gray-700 hover:bg-gray-50 text-sm"
+                                onClick={() => useSuggestion(suggestion)}
+                              >
+                                {suggestion}
+                              </Button>
+                            ))}
                           </div>
                         </motion.div>
-                      ))}
+                      )}
+
+                      {/* Message Input */}
+                      <div className="border-t border-gray-200 bg-white p-4">
+                        <div className="flex items-center">
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                className="mr-2 bg-[#e0e5ce] border-0 hover:bg-[#e0e5ce]/80"
+                              >
+                                <Lightbulb className="h-5 w-5 text-[#415444]" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-80">
+                              <div className="space-y-2">
+                                <h4 className="font-medium">AI Message Suggestions</h4>
+                                <p className="text-sm text-gray-500">
+                                  Get context-aware suggestions to help you respond quickly.
+                                </p>
+                                <Button 
+                                  className="w-full bg-[#415444] hover:bg-[#415444]/90"
+                                  onClick={generateSuggestions}
+                                  disabled={loadingSuggestions}
+                                >
+                                  {loadingSuggestions ? "Generating..." : "Generate Suggestions"}
+                                </Button>
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                          
+                          <Input
+                            placeholder="Type a message..."
+                            value={messageInput}
+                            onChange={(e) => setMessageInput(e.target.value)}
+                            onKeyPress={(e) => {
+                              if (e.key === "Enter") {
+                                handleSendMessage()
+                              }
+                            }}
+                            className="flex-1"
+                          />
+                          <Button
+                            className="ml-2 bg-[#415444] hover:bg-[#415444]/90"
+                            onClick={handleSendMessage}
+                            disabled={!messageInput.trim()}
+                          >
+                            <Send className="h-5 w-5" />
+                          </Button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Message Suggestions */}
-                  {showSuggestions && suggestions.length > 0 && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="border-t border-gray-200 bg-[#e0e5ce] p-3"
-                    >
-                      <div className="flex items-center mb-2">
-                        <Lightbulb className="mr-2 h-4 w-4 text-[#415444]" />
-                        <h4 className="text-sm font-medium text-gray-700">Suggested responses:</h4>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {suggestions.map((suggestion, index) => (
-                          <Button
-                            key={index}
-                            variant="outline"
-                            size="sm"
-                            className="bg-white border-gray-200 text-gray-700 hover:bg-gray-50 text-sm"
-                            onClick={() => useSuggestion(suggestion)}
-                          >
-                            {suggestion}
-                          </Button>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* Message Input */}
-                  <div className="border-t border-gray-200 bg-white p-4">
-                    <div className="flex items-center">
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="mr-2 bg-[#e0e5ce] border-0 hover:bg-[#e0e5ce]/80"
-                          >
-                            <Lightbulb className="h-5 w-5 text-[#415444]" />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-80">
-                          <div className="space-y-2">
-                            <h4 className="font-medium">AI Message Suggestions</h4>
-                            <p className="text-sm text-gray-500">
-                              Get context-aware suggestions to help you respond quickly.
-                            </p>
-                            <Button 
-                              className="w-full bg-[#415444] hover:bg-[#415444]/90"
-                              onClick={generateSuggestions}
-                              disabled={loadingSuggestions}
-                            >
-                              {loadingSuggestions ? "Generating..." : "Generate Suggestions"}
-                            </Button>
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-                      
-                      <Input
-                        placeholder="Type a message..."
-                        value={messageInput}
-                        onChange={(e) => setMessageInput(e.target.value)}
-                        onKeyPress={(e) => {
-                          if (e.key === "Enter") {
-                            handleSendMessage()
-                          }
-                        }}
-                        className="flex-1"
-                      />
-                      <Button
-                        className="ml-2 bg-[#415444] hover:bg-[#415444]/90"
-                        onClick={handleSendMessage}
-                        disabled={!messageInput.trim()}
+                    {/* Travel Plan Panel */}
+                    {showTravelPlan && (
+                      <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="w-1/3 border-l border-gray-200 bg-white overflow-y-auto"
                       >
-                        <Send className="h-5 w-5" />
-                      </Button>
-                    </div>
+                        <div className="p-4">
+                          <h3 className="text-lg font-semibold text-[#415444] mb-4">Travel Plan</h3>
+                          
+                          {getCurrentTravelPlan() && (
+                            <div className="space-y-4">
+                              <div className="bg-[#e0e5ce] rounded-lg p-4">
+                                <h4 className="font-medium text-[#415444] mb-1">{getCurrentTravelPlan()?.title}</h4>
+                                <div className="flex items-center text-sm text-gray-600 mb-2">
+                                  <Calendar className="h-4 w-4 mr-1" />
+                                  {getCurrentTravelPlan()?.startDate} - {getCurrentTravelPlan()?.endDate}
+                                </div>
+                                <div className="flex items-center text-sm text-gray-600">
+                                  <MapPin className="h-4 w-4 mr-1" />
+                                  {getCurrentTravelPlan()?.locations.join(", ")}
+                                </div>
+                              </div>
+                              <div className="bg-[#e0e5ce] rounded-lg p-4">
+                                <h4 className="font-medium text-[#415444] mb-1">{getCurrentTravelPlan()?.title}</h4>
+                                <div className="flex items-center text-sm text-gray-600 mb-2">
+                                  <Calendar className="h-4 w-4 mr-1" />
+                                  {getCurrentTravelPlan()?.startDate} - {getCurrentTravelPlan()?.endDate}
+                                </div>
+                                <div className="flex items-center text-sm text-gray-600">
+                                  <MapPin className="h-4 w-4 mr-1" />
+                                  {getCurrentTravelPlan()?.locations.join(", ")}
+                                </div>
+                              </div>
+                              
+                              {/* Payment Information */}
+                              <Card className="p-4">
+                                <h4 className="font-medium mb-3">Payment Status</h4>
+                                <div className="mb-3">
+                                  <div className="flex justify-between text-sm mb-1">
+                                    <span>Total Cost:</span>
+                                    <span className="font-medium">${getCurrentTravelPlan()?.totalCost}</span>
+                                  </div>
+                                  <div className="flex justify-between text-sm mb-1">
+                                    <span>Paid:</span>
+                                    <span className="font-medium text-green-600">${getCurrentTravelPlan()?.paidAmount}</span>
+                                  </div>
+                                  <div className="flex justify-between text-sm">
+                                    <span>Remaining:</span>
+                                    <span className="font-medium text-amber-600">${getCurrentTravelPlan()?.remainingAmount}</span>
+                                  </div>
+                                </div>
+                                <div className="w-full bg-gray-200 rounded-full h-2.5">
+                                  <div 
+                                    className="bg-green-600 h-2.5 rounded-full" 
+                                    style={{ width: `${((getCurrentTravelPlan()?.paidAmount ?? 0) / (getCurrentTravelPlan()?.totalCost ?? 1)) * 100}%` }}>
+                                  </div>
+                                </div>
+                                <p className="text-xs text-gray-500 mt-2">
+                                  Next payment of ${getCurrentTravelPlan()?.remainingAmount} due by {getCurrentTravelPlan()?.dueDate}
+                                </p>
+                              </Card>
+                              
+                              {/* Payment Schedule */}
+                              <Card className="p-4">
+                                <h4 className="font-medium mb-3">Payment Schedule</h4>
+                                <div className="space-y-2">
+                                  {getCurrentTravelPlan()?.payments.map((payment, index) => (
+                                    <div key={index} className="flex items-center justify-between text-sm">
+                                      <div className="flex items-center">
+                                        <CreditCard className="h-4 w-4 mr-2 text-gray-400" />
+                                        <span>{payment.date}</span>
+                                      </div>
+                                      <div className="flex items-center">
+                                        <span className="mr-2">${payment.amount}</span>
+                                        <span className={`text-xs px-2 py-1 rounded-full ${
+                                          payment.status === "Paid" 
+                                            ? "bg-green-100 text-green-800" 
+                                            : "bg-amber-100 text-amber-800"
+                                        }`}>
+                                          {payment.status}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </Card>
+                              
+                              {/* Action Buttons */}
+                              <div className="flex space-x-2">
+                                <Button className="flex-1 bg-[#415444] hover:bg-[#415444]/90">
+                                  <CreditCard className="h-4 w-4 mr-2" />
+                                  Make Payment
+                                </Button>
+                                <Button variant="outline" className="flex-1">
+                                  View Details
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
                   </div>
                 </>
               ) : (
+                // Empty state when no chat is selected
                 <div className="flex h-full flex-col items-center justify-center bg-gray-50">
                   <Users className="mb-4 h-16 w-16 text-gray-300" />
-                  <h2 className="text-xl font-medium text-gray-700">Select a conversation</h2>
-                  <p className="mt-1 text-gray-500">
-                    Choose a contact to start messaging
+                  <h2 className="mb-2 text-2xl font-medium text-gray-700">No conversation selected</h2>
+                  <p className="text-center text-gray-500">
+                    Select a contact to start messaging or connect with new travelers
                   </p>
-                  {activeTab === "messages" && filteredContacts.length === 0 && (
-                    <Button
-                      className="mt-4 bg-[#415444] hover:bg-[#415444]/90"
-                      onClick={() => setActiveTab("suggestions")}
-                    >
-                      Find new connections
-                    </Button>
-                  )}
                 </div>
               )}
             </div>
           </div>
         </main>
       </div>
+      <Footer />
     </>
   )
 }

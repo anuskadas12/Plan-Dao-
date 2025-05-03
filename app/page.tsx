@@ -10,6 +10,7 @@ import { VerticalNavbar } from "@/components/vertical-navbar"
 import { CustomCursor } from "@/components/custom-cursor"
 import { LoadingScreen } from "@/components/loading-screen"
 import { Footer } from "@/components/Footer"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs"
 
 export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true)
@@ -145,118 +146,441 @@ export default function HomePage() {
               </motion.div>
             </div>
           </section>
+           {/* Enhanced How It Works Section */}
+<section id="how-it-works" className="py-24 md:py-32 bg-[#f9f9f5]">
+  <div className="mx-auto max-w-7xl px-6 md:px-8">
+    <motion.div
+      className="mb-16 text-center"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+    >
+      <h2 className="text-3xl font-bold text-[#415444] md:text-5xl">How It Works</h2>
+      <p className="mt-4 text-xl text-gray-600">Transforming travel planning with <span className="text-[#5a7460] font-semibold">blockchain-powered</span> experiences</p>
+      
+      <motion.div 
+        className="flex justify-center mt-6"
+        initial={{ scale: 0.9, opacity: 0 }}
+        whileInView={{ scale: 1, opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2 }}
+      >
+        <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[#415444] to-transparent rounded-full" />
+      </motion.div>
+    </motion.div>
 
-          {/* How It Works Section */}
-          <section id="how-it-works" className="py-24 md:py-32">
-            <div className="mx-auto max-w-7xl px-6 md:px-8">
-              <motion.div
-                className="mb-16 text-center"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-              >
-                <h2 className="text-3xl font-bold text-[#415444] md:text-5xl">How It Works</h2>
-                <p className="mt-4 text-lg text-gray-600">Simple steps to get your perfect travel plan</p>
-              </motion.div>
-
-              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-                {[
-                  {
-                    step: 1,
-                    title: "Post a Travel Need",
-                    description:
-                      '"I\'m going to Japan in July. Budget: $1,500. Interested in food, culture, and anime."',
-                    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-                  },
-                  {
-                    step: 2,
-                    title: "Get Custom Plans",
-                    description: "Verified travel planners respond with unique, tailored itineraries for your trip.",
-                    image: "https://images.unsplash.com/photo-1504150558240-0b4fd8946624?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-                  },
-                  {
-                    step: 3,
-                    title: "AI Assistant",
-                    description: "Helps refine trip posts, recommends the best plans, and answers questions instantly.",
-                    image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-                  },
-                  {
-                    step: 4,
-                    title: "Choose & Pay",
-                    description:
-                      "Pick your favorite plan, pay with crypto, and funds are held safely in smart contract.",
-                    image: "https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-                  },
-                ].map((item, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1, duration: 0.8 }}
-                  >
-                    <Card className="group h-full border-0 bg-[#e0e5ce] rounded-[24px] overflow-hidden transition-all duration-500 hover:shadow-xl">
-                      {item.image && (
-                        <div className="h-48 w-full overflow-hidden">
-                          <img 
-                            src={item.image} 
-                            alt={item.title} 
-                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" 
-                          />
-                        </div>
-                      )}
-                      <motion.div
-                        className="p-6 pt-8"
-                        whileHover={{ y: -5 }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                      >
-                        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#415444] text-white">
-                          <span className="text-xl font-bold">{item.step}</span>
-                        </div>
-                        <h3 className="mb-2 text-xl font-semibold">{item.title}</h3>
-                        <p className="text-gray-700">{item.description}</p>
-                      </motion.div>
-                    </Card>
-                  </motion.div>
-                ))}
+    {/* Main workflow cards */}
+    {/* <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+      {[
+        // {
+        //   step: 1,
+        //   title: "Post a Travel Need",
+        //   description:
+        //     '"I\'m going to Japan in July. Budget: $1,500. Interested in food, culture, and anime."',
+        //   image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+        // },
+        // {
+        //   step: 2,
+        //   title: "Get Custom Plans",
+        //   description: "Verified travel planners respond with unique, tailored itineraries for your trip.",
+        //   image: "https://images.unsplash.com/photo-1504150558240-0b4fd8946624?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+        // },
+        // {
+        //   step: 3,
+        //   title: "AI Assistant",
+        //   description: "Helps refine trip posts, recommends the best plans, and answers questions instantly.",
+        //   image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+        // },
+        {
+          step: 4,
+          title: "Choose & Pay",
+          description:
+            "Pick your favorite plan, pay with crypto, and funds are held safely in smart contract.",
+          image: "https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+        },
+      ].map((item, index) => (
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: index * 0.1, duration: 0.8 }}
+        >
+          <Card className="group h-full border-0 bg-[#e0e5ce] rounded-[24px] overflow-hidden transition-all duration-500 hover:shadow-xl">
+            {item.image && (
+              <div className="h-48 w-full overflow-hidden">
+                <img 
+                  src={item.image} 
+                  alt={item.title} 
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                />
               </div>
+            )}
+            <motion.div
+              className="p-6 pt-8"
+              whileHover={{ y: -5 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#415444] text-white">
+                <span className="text-xl font-bold">{item.step}</span>
+              </div>
+              <h3 className="mb-2 text-xl font-semibold">{item.title}</h3>
+              <p className="text-gray-700">{item.description}</p>
+            </motion.div>
+          </Card>
+        </motion.div>
+      ))}
+    </div> */}
 
-              <motion.div
-                className="mt-12 flex justify-center"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4, duration: 0.8 }}
-              >
-                <Card className="border-0 bg-[#e7ddd1] rounded-[24px] overflow-hidden transition-all duration-300 hover:shadow-lg max-w-md w-full">
-                  <div className="h-48 w-full overflow-hidden">
+    {/* <motion.div
+      className="mt-12 flex justify-center"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.4, duration: 0.8 }}
+    >
+      <Card className="border-0 bg-[#e7ddd1] rounded-[24px] overflow-hidden transition-all duration-300 hover:shadow-lg max-w-md w-full">
+        <div className="h-48 w-full overflow-hidden">
+          <img 
+            src="https://images.unsplash.com/photo-1494783367193-149034c05e8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+            alt="Verified travel plans" 
+            className="h-full w-full object-cover transition-transform duration-500 hover:scale-110" 
+          />
+        </div>
+        <motion.div
+          className="p-6 pt-8"
+          whileHover={{ y: -5 }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#415444] text-white">
+            <span className="text-xl font-bold">5</span>
+          </div>
+          <h3 className="mb-2 text-xl font-semibold">Verified & Safe</h3>
+          <p className="text-gray-700">
+            Plans are reviewed by the community (DAO) + AI. Only trusted planners allowed. NFT badges prove
+            planner reputation.
+          </p>
+        </motion.div>
+      </Card>
+    </motion.div> */}
+
+    {/* User Journey Tabs */}
+    <motion.div 
+      className="mt-24"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+    >
+      <Tabs defaultValue="traveler" className="w-full">
+        <div className="mb-8 flex justify-center">
+          <TabsList className="bg-[#e0e5ce] p-1 rounded-full">
+            <TabsTrigger 
+              value="traveler" 
+              className="px-6 py-2 rounded-full data-[state=active]:bg-[#415444] data-[state=active]:text-white"
+            >
+              Traveler Journey
+            </TabsTrigger>
+            <TabsTrigger 
+              value="agent" 
+              className="px-6 py-2 rounded-full data-[state=active]:bg-[#415444] data-[state=active]:text-white"
+            >
+              Travel Agent Journey
+            </TabsTrigger>
+          </TabsList>
+        </div>
+        
+        <TabsContent value="traveler" className="mt-4">
+          <div className="bg-white rounded-[24px] p-8 shadow-lg">
+            <h3 className="text-2xl font-bold text-[#415444] mb-4 text-center">Complete Traveler Workflow</h3>
+            <p className="text-center text-gray-600 mb-8 max-w-2xl mx-auto">Your journey from dream to reality, secured by blockchain technology</p>
+            
+            <div className="grid md:grid-cols-2 gap-x-12 gap-y-10">
+              {[
+                {
+                  step: 1,
+                  title: "Sign Up & Profile Creation",
+                  description: "Register with email/crypto wallet. Set your travel preferences including budget, travel style, and dates. Boost your trust score with optional KYC verification.",
+                  icon: "👤",
+                  image: "https://images.unsplash.com/photo-1484807352052-23338990c6c6?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                },
+                {
+                  step: 2,
+                  title: "Post Travel Request",
+                  description: "Specify destination, dates, budget, and travel interests (beaches, adventure, food). Request only verified/RWA-backed plans for added security.",
+                  icon: "✏️",
+                  image: "https://images.unsplash.com/photo-1527631746610-bca00a040d60?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                },
+                {
+                  step: 3,
+                  title: "Receive Proposals from Agents",
+                  description: "Browse custom plans with day-wise itineraries, price breakdowns, accommodation details, and RWA-backed verification badges.",
+                  icon: "📝",
+                  image: "https://images.unsplash.com/photo-1627556592933-ffe99c1cd9eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                },
+                {
+                  step: 4,
+                  title: "Compare & Select a Plan",
+                  description: "Filter by price, rating, and RWA verification. Access detailed agent profiles with verified ratings to find your perfect match.",
+                  icon: "🔍",
+                  image: "https://images.unsplash.com/photo-1542296332-2e4473faf563?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                },
+                {
+                  step: 5,
+                  title: "Make Payment (Escrow Smart Contract)",
+                  description: "Your funds remain secure in our blockchain-based escrow system, visible to the DAO but inaccessible to the agent until trip completion.",
+                  icon: "🔐",
+                  image: "https://images.unsplash.com/photo-1618044619888-009e412ff12a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                },
+                {
+                  step: 6,
+                  title: "Final Planning & Communication",
+                  description: "Fine-tune your experience through our encrypted chat system. Add special requests, confirm details, and prepare for your adventure.",
+                  icon: "💬",
+                  image: "https://images.unsplash.com/photo-1577563908411-5077b6dc7624?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                },
+                {
+                  step: 7,
+                  title: "Complete the Travel",
+                  description: "Embark on your journey with confidence, knowing every detail has been carefully planned and secured by our platform.",
+                  icon: "✈️",
+                  image: "https://images.unsplash.com/photo-1488085061387-422e29b40080?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                },
+                {
+                  step: 8,
+                  title: "Post-Trip Submission",
+                  description: "Share your experiences through photos, satisfaction letters, and optional verified receipts that enhance the community's trust network.",
+                  icon: "📸",
+                  image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                },
+                {
+                  step: 9,
+                  title: "DAO Review & Agent Payment",
+                  description: "Our decentralized community validates your trip experience, automatically triggering smart contract payment to your agent.",
+                  icon: "⚖️",
+                  image: "https://images.unsplash.com/photo-1575505586569-646b2ca898fc?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                },
+                {
+                  step: 10,
+                  title: "Rate the Agent & Earn Reputation",
+                  description: "Contribute to our ecosystem by rating your experience and earning your own soulbound NFT badge that enhances your future travel options.",
+                  icon: "⭐",
+                  image: "https://images.unsplash.com/photo-1508697014387-db70aad34f4d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                }
+              ].map((item, index) => (
+                <motion.div 
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1, duration: 0.6 }}
+                  className="bg-[#f8f9f7] rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500"
+                >
+                  <div className="h-40 overflow-hidden">
                     <img 
-                      src="https://images.unsplash.com/photo-1494783367193-149034c05e8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                      alt="Verified travel plans" 
-                      className="h-full w-full object-cover transition-transform duration-500 hover:scale-110" 
+                      src={item.image} 
+                      alt={item.title}
+                      className="w-full h-full object-cover transition-transform duration-700 hover:scale-110" 
                     />
                   </div>
-                  <motion.div
-                    className="p-6 pt-8"
-                    whileHover={{ y: -5 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  >
-                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#415444] text-white">
-                      <span className="text-xl font-bold">5</span>
+                  <div className="p-6">
+                    <div className="flex items-center mb-3">
+                      <div className="flex-shrink-0 h-10 w-10 rounded-full bg-[#415444] text-white flex items-center justify-center mr-3">
+                        <span className="font-bold">{item.step}</span>
+                      </div>
+                      <span className="text-2xl">{item.icon}</span>
+                      <h4 className="text-lg font-semibold text-[#415444] ml-2">{item.title}</h4>
                     </div>
-                    <h3 className="mb-2 text-xl font-semibold">Verified & Safe</h3>
-                    <p className="text-gray-700">
-                      Plans are reviewed by the community (DAO) + AI. Only trusted planners allowed. NFT badges prove
-                      planner reputation.
-                    </p>
-                  </motion.div>
-                </Card>
+                    <p className="text-gray-700">{item.description}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="agent" className="mt-4">
+          <div className="bg-white rounded-[24px] p-8 shadow-lg">
+            <h3 className="text-2xl font-bold text-[#415444] mb-4 text-center">Complete Travel Agent Workflow</h3>
+            <p className="text-center text-gray-600 mb-8 max-w-2xl mx-auto">Turn your travel expertise into a thriving business with our blockchain-powered platform</p>
+            
+            <div className="relative mb-12 overflow-hidden rounded-xl">
+              <div className="absolute inset-0 bg-gradient-to-r from-[#415444]/70 via-[#415444]/50 to-transparent z-10"></div>
+              <img 
+                src="https://www.istockphoto.com/photo/driving-through-forest-aerial-view-gm888361900-246436757"
+                alt="Travel Agent Experience"
+                className="w-full h-64 object-cover"
+              />
+              <motion.div 
+                className="absolute inset-0 z-20 flex items-center px-12"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1 }}
+              >
+                <div className="max-w-lg">
+                  <h4 className="text-2xl font-bold text-white mb-3">Become a Verified Travel Expert</h4>
+                  <p className="text-white/90">Our platform transforms how you connect with clients, secure payments, and build your reputation in the travel industry.</p>
+                </div>
               </motion.div>
             </div>
-          </section>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                {
+                  step: 1,
+                  title: "Sign Up & Verification",
+                  description: "Complete KYC verification, link your crypto wallet, and stake tokens to unlock proposal rights. Tokenize your travel assets for added credibility.",
+                  icon: "🔐",
+                  color: "bg-[#e0e5ce]",
+                  iconBg: "bg-[#415444]"
+                },
+                {
+                  step: 2,
+                  title: "Browse Travel Requests",
+                  description: "Access a marketplace of travel needs filtered by destination, budget, and dates to match your expertise and offerings.",
+                  icon: "🔍",
+                  color: "bg-[#e7ddd1]",
+                  iconBg: "bg-[#415444]"
+                },
+                {
+                  step: 3,
+                  title: "Submit Custom Travel Plans",
+                  description: "Create personalized itineraries with verified bookings and RWA-backed offers that stand out from the competition.",
+                  icon: "✏️",
+                  color: "bg-[#e0e5ce]",
+                  iconBg: "bg-[#415444]"
+                },
+                {
+                  step: 4,
+                  title: "Get Selected by Traveller",
+                  description: "Receive selection notifications and use our secure chat to finalize all travel details with your clients.",
+                  icon: "🤝",
+                  color: "bg-[#e7ddd1]",
+                  iconBg: "bg-[#415444]"
+                },
+                {
+                  step: 5,
+                  title: "Wait for Travel Completion",
+                  description: "Focus on providing excellent service while funds remain securely locked in our blockchain escrow system.",
+                  icon: "⏳",
+                  color: "bg-[#e0e5ce]",
+                  iconBg: "bg-[#415444]"
+                },
+                {
+                  step: 6,
+                  title: "Payment Released After DAO Validation",
+                  description: "Receive automatic payment to your wallet after our decentralized community verifies trip completion.",
+                  icon: "💰",
+                  color: "bg-[#e7ddd1]",
+                  iconBg: "bg-[#415444]"
+                },
+                {
+                  step: 7,
+                  title: "Build Reputation",
+                  description: "Grow your business through our transparent review system that rewards quality with higher visibility and opportunities.",
+                  icon: "⭐",
+                  color: "bg-[#e0e5ce]",
+                  iconBg: "bg-[#415444]"
+                },
+                {
+                  step: 8,
+                  title: "RWA Collateral Management",
+                  description: "Leverage your real-world assets as collateral to gain priority visibility and enhanced credibility with travelers.",
+                  icon: "🏨",
+                  color: "bg-[#e7ddd1]",
+                  iconBg: "bg-[#415444]"
+                }
+              ].map((item, index) => (
+                <motion.div 
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.05, duration: 0.5 }}
+                  whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
+                  className={`${item.color} rounded-xl p-6 hover:shadow-lg transition-all duration-300`}
+                >
+                  <div className="flex items-center mb-4">
+                    <div className={`flex-shrink-0 h-12 w-12 rounded-full ${item.iconBg} text-white flex items-center justify-center mr-3`}>
+                      <span className="font-bold">{item.step}</span>
+                    </div>
+                    <span className="text-3xl">{item.icon}</span>
+                  </div>
+                  <h4 className="text-lg font-semibold text-[#415444] mb-2">{item.title}</h4>
+                  <p className="text-gray-700">{item.description}</p>
+                </motion.div>
+              ))}
+            </div>
+            
+            <div className="mt-10 p-4 border-l-4 border-[#415444] bg-[#f8f9f7] rounded-r-lg">
+              <h4 className="font-semibold text-[#415444]">💡 Pro Tip for Travel Agents</h4>
+              <p className="text-gray-700">Agents who back their offerings with tokenized Real World Assets receive 2.5x more bookings and 30% higher reviews on average.</p>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+    </motion.div>
 
-          {/* Web3 Features */}
+    {/* Testimonials */}
+    <motion.div
+      className="mt-24 mb-16"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 1 }}
+    >
+      <h3 className="text-2xl font-bold text-[#415444] text-center mb-10">What Our Community Says</h3>
+      
+      <div className="grid md:grid-cols-3 gap-8">
+        {[
+          {
+            quote: "As a traveler, I love how the platform connects me with experts who create experiences I couldn't find anywhere else. The blockchain security made me feel completely safe.",
+            author: "Mia Chen",
+            role: "Adventure Traveler",
+            avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
+          },
+          {
+            quote: "I've been a travel agent for 15 years, and this platform has transformed my business. The escrow system means I can focus on creating amazing trips without payment concerns.",
+            author: "James Wilson",
+            role: "Travel Expert",
+            avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
+          },
+          {
+                quote: "The RWA backing gives me confidence that what I'm booking is real. My Japan trip was flawlessly organized, and the DAO review system ensured everything was as promised.",
+                author: "Sophie Rodriguez",
+                role: "Digital Nomad",
+                avatar: "https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
+              },
+            ].map((testimonial, index) => (
+              <motion.div
+                key={index}
+                className="bg-white p-6 rounded-xl shadow-lg"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1, duration: 0.8 }}
+              >
+                <p className="text-gray-700 mb-4">{testimonial.quote}</p>
+                <div className="flex items-center">
+                  <img
+                    src={testimonial.avatar}
+                    alt={testimonial.author}
+                    className="w-12 h-12 rounded-full mr-4"
+                  />
+                  <div>
+                    <h4 className="font-semibold">{testimonial.author}</h4>
+                    <p className="text-gray-600 text-sm">{testimonial.role}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+          </motion.div>
+        </div>
+      </section>
+            {/* Web3 Features */}
           <section id="features" className="bg-[#f8f9fa] py-24 md:py-32">
             <div className="mx-auto max-w-7xl px-6 md:px-8">
               <div className="grid gap-16 md:grid-cols-2">

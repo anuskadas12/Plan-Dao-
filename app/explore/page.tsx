@@ -2,12 +2,12 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { CalendarDays, Gift, Heart, MapPin, Plus, Share2, User, Check, X } from "lucide-react"
+import { CalendarDays, Gift, Heart, MapPin, Plus, Share2, User, Check, X, Info, Coins } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -71,6 +71,22 @@ export default function ExplorePage() {
     4: 15,
   })
   const [userVoted, setUserVoted] = useState<{ [key: number]: boolean | null }>({})
+  const [stakeAmount, setStakeAmount] = useState("")
+  const [userTokens] = useState(100)
+  const [voteChoice, setVoteChoice] = useState<boolean | null>(null)
+  const [tokenStakeDialogOpen, setTokenStakeDialogOpen] = useState(false)
+
+  const handleVoteInitiate = (postId: number, satisfied: boolean) => {
+    setVoteChoice(satisfied)
+    setTokenStakeDialogOpen(true)
+  }
+
+  const handleVoteConfirm = () => {
+    if (activePostId !== null && voteChoice !== null) {
+      handleVote(activePostId, voteChoice)
+    }
+    setTokenStakeDialogOpen(false)
+  }
 
   // 2. Add a function to handle voting
   const handleVote = (postId: number, satisfied: boolean) => {
@@ -1363,14 +1379,14 @@ const handleConfirmPostSubmission = (destination: string) => {
                         <h3 className="mb-4 text-center text-lg font-medium">Are you satisfied with this plan?</h3>
                         <div className="flex justify-center gap-4">
                           <Button
-                            onClick={() => handleVote(activePostId || 0, true)}
+                            onClick={() => handleVoteInitiate(activePostId || 0, true)}
                             className="bg-[#415444] px-6 hover:bg-[#415444]/90"
                           >
                             <Check className="mr-2 h-4 w-4" />
                             Yes
                           </Button>
                           <Button
-                            onClick={() => handleVote(activePostId || 0, false)}
+                            onClick={() => handleVoteInitiate(activePostId || 0, false)}
                             variant="outline"
                             className="border-[#415444] px-6 text-[#415444] hover:bg-[#415444]/10"
                           >
@@ -1385,6 +1401,64 @@ const handleConfirmPostSubmission = (destination: string) => {
               </TabsContent>
             </Tabs>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Plan Token Staking Dialog */}
+      <Dialog open={tokenStakeDialogOpen} onOpenChange={setTokenStakeDialogOpen}>
+        <DialogContent className="sm:max-w-[400px]">
+          <DialogHeader>
+            <DialogTitle>Stake Plan Tokens</DialogTitle>
+            <DialogDescription>
+              Stake tokens to verify this plan. Your feedback helps improve our community recommendations.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <div className="mb-4">
+              <Label htmlFor="tokenAmount" className="mb-2 block text-sm font-medium">
+                Number of Plan Tokens to Stake
+              </Label>
+              <div className="flex items-center">
+                <Input
+                  id="tokenAmount"
+                  type="number"
+                  min="1"
+                  value={stakeAmount}
+                  onChange={(e) => setStakeAmount(e.target.value)}
+                  className="border-[#e0e5ce] focus-visible:ring-[#415444]"
+                />
+                <Coins className="ml-2 h-5 w-5 text-amber-500" />
+              </div>
+              <p className="mt-1 text-xs text-gray-500">Available: {userTokens} tokens</p>
+            </div>
+            
+            <div className="rounded-md bg-[#f8f9f4] p-3">
+              <div className="flex items-center gap-2 text-sm">
+                <Info className="h-4 w-4 text-[#415444]" />
+                <span className="text-gray-700">
+                  {voteChoice ? 
+                    "Staking tokens on a positive verification helps support quality travel plans." :
+                    "Staking tokens on a rejection helps filter out low-quality travel plans."}
+                </span>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => setTokenStakeDialogOpen(false)}
+              className="border-[#415444] text-[#415444] hover:bg-[#415444]/10"
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={() => handleVoteConfirm()}
+              className="bg-[#415444] hover:bg-[#415444]/90"
+              disabled={!stakeAmount || Number(stakeAmount) <= 0 || Number(stakeAmount) > userTokens}
+            >
+              Confirm Stake
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
