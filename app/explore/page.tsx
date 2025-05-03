@@ -21,6 +21,8 @@ import { useToast } from "@/components/ui/use-toast"
 import { useAppKitAccount, useAppKitNetwork } from "@reown/appkit/react"
 import { useWriteContract } from "wagmi"
 import  propAbi  from "@/contracts/abi.json"
+import  propAbi2  from "@/contracts/abi2.json"
+
 
 export default function ExplorePage() {
   const { toast } = useToast()
@@ -117,43 +119,63 @@ export default function ExplorePage() {
     setTokenConfirmDialogOpen(true)
   }
 
-  const handleConfirmPostSubmission = () => {
-    // Create a new post and add it to the travelPosts array
-    const newPost = {
-      id: travelPosts.length + 1,
-      user: {
-        name: "You",
-        avatar: "/placeholder.svg?height=100&width=100",
-        verified: walletConnected,
-      },
-      destination: destination,
-      dates: `${new Date(startDate).toLocaleDateString()} - ${new Date(endDate).toLocaleDateString()}`,
-      budget: budget,
-      interests: selectedInterests,
-      description: description,
-      likes: 0,
-      comments: 0,
-      responses: 0,
-      timePosted: "Just now",
-      liked: false,
-      plans: [],
-    }
 
-    setTravelPosts([newPost, ...travelPosts])
-    setTokenConfirmDialogOpen(false)
-    setPostDialogOpen(false)
+const contract2 = "0x9abFF76733c76Eef3f3DC0a44FD8FD3e8e8b4b94"
 
-    // Reset form
-    setDestination("")
-    setBudget("")
-    setStartDate("")
-    setEndDate("")
-    setSelectedInterests([])
-    setDescription("")
 
-    // Show success toast
-    alert("Travel need posted successfully!")
+
+const handleConfirmPostSubmission = (destination: string) => {
+  // Initiate the transaction
+  writeContract({
+    abi: propAbi2,
+    functionName: "posting",
+    address: contract2,
+    args: [destination],
+  })
+  try {
+    console.log("Transaction initiated");
+  } catch (error) {
+    console.error("Error initiating transaction:", error);
   }
+
+  // Create a new post and add it to the travelPosts array
+  const newPost = {
+    id: travelPosts.length + 1,
+    user: {
+      name: "You",
+      avatar: "/placeholder.svg?height=100&width=100",
+      verified: walletConnected,
+    },
+    destination: destination,
+    dates: `${new Date(startDate).toLocaleDateString()} - ${new Date(endDate).toLocaleDateString()}`,
+    budget: budget,
+    interests: selectedInterests,
+    description: description,
+    likes: 0,
+    comments: 0,
+    responses: 0,
+    timePosted: "Just now",
+    liked: false,
+    plans: [],
+  };
+
+  setTravelPosts([newPost, ...travelPosts]);
+  setTokenConfirmDialogOpen(false);
+  setPostDialogOpen(false);
+
+  // Reset form
+  setDestination("");
+  setBudget("");
+  setStartDate("");
+  setEndDate("");
+  setSelectedInterests([]);
+  setDescription("");
+
+  // Show success toast after 8 seconds
+  setTimeout(() => {
+    alert("Travel need posted successfully!");
+  }, 8000); // 8000 milliseconds = 8 seconds
+};
 
   const handleSharePost = (postId: number) => {
     setActivePostId(postId)
@@ -938,7 +960,7 @@ export default function ExplorePage() {
                       <Button variant="outline" onClick={() => setTokenConfirmDialogOpen(false)}>
                         Cancel
                       </Button>
-                      <Button className="bg-[#415444] hover:bg-[#415444]/90" onClick={handleConfirmPostSubmission}>
+                      <Button className="bg-[#415444] hover:bg-[#415444]/90" onClick={() => handleConfirmPostSubmission(destination)}>
                         Confirm & Post
                       </Button>
                     </div>
