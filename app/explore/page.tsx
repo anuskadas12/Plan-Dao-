@@ -160,8 +160,8 @@ export default function ExplorePage() {
     setShareDialogOpen(true)
   }
 
-  const contract_address = "0xE848aDaDC71b7373639e4EbeC1E81331731F5Dad"
-  const a = "0xd40e93584a809Bbf26524571a7244C167Cca541F";
+  const contract_address = "0xFeCCb1F9865Ac5e3897A5e0823574e749e7Be1aa"
+  
   const b = 25;
 
   const handleClaimRewards = (a :string  , b :number ) => {
