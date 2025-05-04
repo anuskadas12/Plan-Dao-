@@ -70,7 +70,7 @@ Welcome to PlanDao , a decentralized travel platform where trust, real-world val
 
 3.  Secure with Escrow
 
-   Traveller picks a plan; payment is held safely in a smart contract.
+     Traveller picks a plan; payment is held safely in a smart contract.
 
 4. Chat & Confirm
  
