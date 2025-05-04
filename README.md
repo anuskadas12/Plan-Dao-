@@ -60,32 +60,31 @@ Welcome to PlanDao , a decentralized travel platform where trust, real-world val
   
 
 
+1. Sign Up
 
-  1. Sign Up
+   Travellers create profiles; agents verify identity (KYC).
 
-  Travellers create profiles; agents verify identity (KYC).
+2.  Post & Match
 
-  2.  Post & Match
+      Travellers post trip needs; agents send custom plans.
 
-   Travellers post trip needs; agents send custom plans.
-
- 3.  Secure with Escrow
+3.  Secure with Escrow
 
    Traveller picks a plan; payment is held safely in a smart contract.
 
- 4. Chat & Confirm
+4. Chat & Confirm
  
-   Clarify details via chat or video before finalizing.
+    Clarify details via chat or video before finalizing.
 
- 5.  Travel & Upload Proof
+5.  Travel & Upload Proof
 
-   Traveller enjoys the trip, then submits reviews or proof.
+     raveller enjoys the trip, then submits reviews or proof.
 
- 6. DAO Verifies & Pays Agent
+6. DAO Verifies & Pays Agent
 
- DAO members verify the trip, then release payment to the agent.
+   DAO members verify the trip, then release payment to the agent.
 
- Both sides build reputation in the system.
+Both sides build reputation in the system.
 
 
 
