@@ -1,177 +1,119 @@
-Plan Dao 🛫 
+# 🌍 Plan DAO
 
-Where travel meets transparency. Plan, pay, and verify — all on-chain.
+**Decentralized Travel Booking Platform**  
+Custom travel experiences powered by smart contracts, escrow payments, DAO verification, and zk-proof privacy—all on **Pharos**.
 
+---
 
-Welcome to PlanDao , a decentralized travel platform where trust, real-world value, and community governance ensure safe,
- verified, and rewarding travel experiences. Powered by milestone-based funding, 
- DAO verification, and RWA-backed guarantees, this is next-gen peer-to-peer travel.🎉
+## 🚀 What is Plan DAO?
 
+Plan DAO revolutionizes travel by connecting **travellers** with **travel agents** in a **trustless, decentralized** ecosystem:
 
+- ✅ **Custom travel plans**
+- 🔐 **Escrow-secured payments**
+- 🏛️ **DAO-verified service quality**
+- 🏢 **Real-world asset (RWA) guarantees**
+- 🕶️ **Anonymous bookings via zk-proofs (Pharos integrated)**
 
+---
 
+## 🔗 Smart Contract
 
-🏆 Why Choose PLAN DAO on EDU?
+- **Network:** Pharos testnet
+- **Contract Address:** `0x2bC015cD3f61c0A5F51B2475D871a269FE6c7815`
+- **Explorer Link:** [View on Pharosscan](https://pharosscan.xyz/address/0x2bC015cD3f61c0A5F51B2475D871a269FE6c7815)
 
+---
 
+## ✨ Key Features
 
+| 🚀 Feature                        | 💬 Description                                                                                   |
+|-----------------------------------|-------------------------------------------------------------------------------------------------|
+| 📝 **Custom Travel Requests**     | Travellers post detailed requirements; agents submit tailored plans.                             |
+| 💸 **Escrow Payments**            | Funds are locked in a smart contract until travel completion is verified.                        |
+| 👥 **DAO Verification**           | Community (DAO) votes on submitted travel proof (photos, reviews) to authorize payouts.          |
+| 🏠 **RWA Integration**            | Plans are backed by real-world assets (hotels, tours) for trust & reliability.                   |
+| 🔒 **Privacy-First (Pharos)**     | Pharos zk-proofs ensure anonymity while preserving trustless identity verification.              |
+| 🚫 **No Middlemen Fees**          | Fully peer-to-peer with no extra platform charges.                                               |
 
+---
 
+## 🗺️ User Flow
 
+The following diagram illustrates the **Plan DAO user journey**:
 
-💰 Milestone-Based Funding: Funds are released in phases, ensuring accountability at every step.
-🔒 EDU Security: Enjoy fast, feeless transactions and robust security features with EDU Chain.
-👥 Community-Powered Decisions: Transparent travel plan  ensure fairness and trust.
-📈 Reputation Growth: Build credibility for future travel plan and long-term success.
 
+![plandao_flowchart](https://github.com/user-attachments/assets/1f200915-9848-4d4b-86f1-597431d67ff5)
 
 
+**Step-by-step:**
 
-🔑 Key Features
+1️⃣ **Traveller posts plan requirements.**  
+2️⃣ **Travel agents submit offers.**  
+3️⃣ **Traveller selects a plan & pays (escrow-secured).**  
+4️⃣ **Travel takes place.**  
+5️⃣ **Traveller uploads review/proof of completion.**  
+6️⃣ **DAO members verify & approve.**  
+7️⃣ **Funds are released to the travel agent.**
 
+---
 
+## 🔑 Why Pharos?
 
+Plan DAO is **built exclusively on Pharos** to leverage:
 
+- 🔒 **zk-proof-based identity verification**
+- ✅ **Anonymous yet verifiable user interactions**
+- 🛡️ **Strong anti-fraud protection for DAO governance**
+- ⚡ **Optimized fees & fast finality unique to Pharos**
 
+---
 
-  📊 Milestone-Based Escrow: Funds are released only after verified milestones, ensuring agents deliver quality service.
-  
-  
-  🤝 DAO-Verified Travel Proof: Community-driven review process validates trip completion and satisfaction before agent payment.
-  
-  
-  🎥 Ad-Based Contributions: Travellers can opt to watch ads to contribute to payment or fees, making it more accessible.
-  
-  
-  
-  💼 Minimal Platform Fees: Just a 2% withdrawal fee; the rest goes to the service providers.
+## 🛠️ Tech Stack
 
+- **Solidity Smart Contracts (Pharos EVM)**
+- **Pharos zk-Proof Integration**
+- **IPFS/Filecoin for Proof Storage**
+- **React Frontend (suggested)**
+- **DAO Voting (Snapshot or custom)**
 
-  
+---
 
+## 🛤️ Roadmap
 
+- 🏅 Agent reputation & scoring system
+- 🖼️ NFT-based travel package certifications
+- 📱 Mobile app (iOS/Android)
+- 🔗 Layer-2 enhancements for Pharos optimization
 
+---
 
+## 🌟 Unique Selling Points (USP)
 
+1. **Tailored travel plans** crafted by agents per user request.
+2. **Escrow + DAO verification** ensures maximum security & fairness.
+3. **No extra fees**—100% peer-to-peer.
+4. **zk-Proof privacy** keeps identities safe yet trustable.
+5. **RWA-backed guarantees** provide additional safety & credibility.
+6. **Exclusively on Pharos** for privacy-first, fast, and cost-efficient booking.
 
-  
-  🛫 How it Works
+---
 
-  
+## ✨ Why Plan DAO?
 
+> "Decentralized travel booking secured by escrow, DAO verification, and RWA-backed guarantees.  
+Built 100% on Pharos for privacy, security, and next-gen peer-to-peer travel."
 
-1. Sign Up
+---
 
-   Travellers create profiles; agents verify identity (KYC).
+## 🤝 Get Involved
 
-2.  Post & Match
+- 📢 **Submit Issues:** Help improve by reporting bugs or feature requests.
+- 👥 **Join the DAO:** Become part of the community governance.
+- 💻 **Contribute:** PRs welcome for smart contract, frontend, or DAO tooling!
 
-      Travellers post trip needs; agents send custom plans.
+---
 
-3.  Secure with Escrow
+## 📄 License
 
-     Traveller picks a plan; payment is held safely in a smart contract.
-
-4. Chat & Confirm
- 
-    Clarify details via chat or video before finalizing.
-
-5.  Travel & Upload Proof
-
-     raveller enjoys the trip, then submits reviews or proof.
-
-6. DAO Verifies & Pays Agent
-
-   DAO members verify the trip, then release payment to the agent.
-
-Both sides build reputation in the system.
-
-
-
-
-
-
-
-🚀 Get Started 
-
-
-
-
-
-   🔍 Explore Travel
-
-  Browse verified travel opportunities, including unique RWA-backed experiences.
-
-
-
- 🌍 Launch Your Travel Journey
-
-
- Set your travel goals, post requests, or offer your expert services.
-
-
- 🗳 Engage with the DAO
-
-
- Vote on dispute resolutions, milestone verifications, and platform upgrades.
-
-
- 💰 Earn & Invest
-
-
- Stake in RWA-based assets, verify trips, and earn DAO tokens for contributions. 
-
-
-
-
-🛠️  How to Use
-
-
-
-1. Clone the Repository:
-
-
-git clone https://github.com/anuskadas12/Plan-Dao-.git
-
-
-2.Navigate to the Project Directory:
-
-cd PlanDao
-
-
-
-3. Install Dependencies:
-
-
-npm install 
-
-
-4.Start the Development Server:
-
-npm run dev
-
-
-
-5.Open in Browser:
-
-
-Navigate to http://localhost:3000/to explore PlanDao.
-
-
-Deploy: Follow the deployment instructions in the repository to go live.
-
-
-
-
-
-🌟 Join the PlanDao Movement
-
-
-
-
-Be more than just a traveller or agent—be a stakeholder in the future of travel.
-PlanDAO is where your voice shapes the platform ,  your trust builds the system, and your journey earns real value.
-
-
-
- 
+MIT License © 2025 Plan DAO
