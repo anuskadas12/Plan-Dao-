@@ -116,6 +116,17 @@ export default function ReviewPage() {
 
   const handleSubmitReview = (address: string | undefined, to: string, token: number) => {
     // Add validation
+
+     writeContract({
+              abi: propAbi,
+              functionName: "post",
+              address: contract_address,
+              args: [address, to, token],
+            })
+
+
+
+
     if (!destination || !reviewTitle || !reviewText || rating === 0) {
       toast({
         title: "Missing information",
@@ -134,12 +145,12 @@ export default function ReviewPage() {
       return
     }
 
-    writeContract({
-      abi: propAbi, // Replace with the actual ABI of your contract
-      functionName: "post",
-      address: contract_address,
-      args: [address, to, token],
-    })
+    // writeContract({
+    //   abi: propAbi, // Replace with the actual ABI of your contract
+    //   functionName: "post",
+    //   address: contract_address,
+    //   args: [address, to, token],
+    // })
 
     // Create a new review and add it to the reviews array
     const newReview = {
@@ -313,7 +324,7 @@ export default function ReviewPage() {
       id: 1,
       user: {
         name: "Alex Johnson",
-        avatar: "/placeholder.svg?height=100&width=100",
+        avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA6nr6QZlcLX33XOzOazIkGN04DvnE6gzod9qnH53DE2S2IuCQqWLPqEetRwPwWxrGByM&usqp=CAU",
         verified: true,
       },
       destination: "Kyoto, Japan",
@@ -322,10 +333,10 @@ export default function ReviewPage() {
       rating: 5,
       tags: ["Cultural", "Food", "Nature"],
       images: [
-        "/placeholder.svg?height=600&width=800",
-        "/placeholder.svg?height=600&width=800",
-        "/placeholder.svg?height=600&width=800",
-        "/placeholder.svg?height=600&width=800",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGFRGykMeF86XUjm8_1IkelJyLX1cttKyXZw&s",
+        "https://gaijinpot.scdn3.secure.raxcdn.com/app/uploads/sites/6/2021/02/Kyoto-Japan-old-town-streets-in-the-Higashiyama-district@3x-1024x683.jpg",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSijYc6zTKzzWEvx3yRrBGNAwkJVsx7dOaBfQ&s",
+        "https://cdn.craft.cloud/101e4579-0e19-46b6-95c6-7eb27e4afc41/assets/uploads/pois/kyoto-japan-frommers.jpg?width=1200&height=630&quality=82&fit=cover&s=kmxdKluB3-i_ntEA7Vpv4uAoEyo4RzcoXlpIiJxEprA",
       ],
       comments: 15,
       timePosted: "2 days ago",
@@ -334,7 +345,7 @@ export default function ReviewPage() {
       id: 2,
       user: {
         name: "Maria Garcia",
-        avatar: "/placeholder.svg?height=100&width=100",
+        avatar: "https://img.freepik.com/premium-photo/woman-black-suit-stands-front-building-with-her-arms-crossed_889227-21778.jpg",
         verified: true,
       },
       destination: "Santorini, Greece",
@@ -343,9 +354,9 @@ export default function ReviewPage() {
       rating: 4,
       tags: ["Beach", "Romantic", "Food"],
       images: [
-        "/placeholder.svg?height=600&width=800",
-        "/placeholder.svg?height=600&width=800",
-        "/placeholder.svg?height=600&width=800",
+        "https://media.istockphoto.com/id/541132240/photo/oia-at-sunset.jpg?s=612x612&w=0&k=20&c=kql4X3tMkOmYsa4PX45WK7-vHzpOk__IeAaHiz4VfyA=",
+        "https://www.santorini-island.com/santorini-photos/the-world-famous-sunset-in-santorini-santorini-with-famous-windmill-in-greece-oia-village-135-411d.jpg",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRutx19a_KhgF0Wc5ed1abPNwosrP8750BDA&s",
       ],
       comments: 8,
       timePosted: "1 week ago",
@@ -354,7 +365,7 @@ export default function ReviewPage() {
       id: 3,
       user: {
         name: "David Kim",
-        avatar: "/placeholder.svg?height=100&width=100",
+        avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHAP3M1A1tyzATmHSRq8KJ6Hz6bNwPEAt-dqYbYEumL4A9ZNhltwJsEitpnyQBQEEVgMg&usqp=CAU",
         verified: false,
       },
       destination: "Bali, Indonesia",
@@ -362,7 +373,7 @@ export default function ReviewPage() {
       text: "Spent two weeks exploring Bali and it was the perfect balance of adventure and relaxation. The beaches in the south were great for surfing, while Ubud offered cultural experiences and lush rice terraces. The local people were incredibly friendly and welcoming. Don't miss the traditional dance performances and the sacred monkey forest!",
       rating: 5,
       tags: ["Adventure", "Beach", "Cultural"],
-      images: ["/placeholder.svg?height=600&width=800", "/placeholder.svg?height=600&width=800"],
+      images: ["https://d3sftlgbtusmnv.cloudfront.net/blog/wp-content/uploads/2025/01/Bali-Travel-Guide-Cover-Photo-840x425.jpg", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrt74FXU3n0hgHOu9W9xsGsE_cGdhVPEqHAQ&s"],
       comments: 6,
       timePosted: "2 weeks ago",
     },
@@ -408,7 +419,7 @@ export default function ReviewPage() {
                 <p className="mt-2 text-gray-600">Share your experiences and discover new destinations</p>
               </div>
 
-              <div className="mt-4 flex items-center gap-4 md:mt-0">
+              {/* <div className="mt-4 flex items-center gap-4 md:mt-0">
                 {walletConnected ? (
                   <div className="flex items-center gap-2">
                     <Avatar className="h-8 w-8 border border-[#415444]">
@@ -423,7 +434,7 @@ export default function ReviewPage() {
                     Connect Wallet
                   </Button>
                 )}
-              </div>
+              </div> */}
             </div>
 
             {/* Main Grid Layout */}

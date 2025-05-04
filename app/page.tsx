@@ -408,7 +408,7 @@ export default function HomePage() {
             <div className="relative mb-12 overflow-hidden rounded-xl">
               <div className="absolute inset-0 bg-gradient-to-r from-[#415444]/70 via-[#415444]/50 to-transparent z-10"></div>
               <img 
-                src="https://www.istockphoto.com/photo/driving-through-forest-aerial-view-gm888361900-246436757"
+                src="https://middleeasttravels.com/wp-content/uploads/2024/04/banner01.png"
                 alt="Travel Agent Experience"
                 className="w-full h-64 object-cover"
               />

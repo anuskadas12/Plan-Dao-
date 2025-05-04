@@ -813,7 +813,7 @@ const handleConfirmPostSubmission = (address: string | undefined, to: string, to
                 <p className="mt-2 text-gray-600">Discover travel needs and create custom plans</p>
               </div>
 
-              <div className="mt-4 flex items-center gap-4 md:mt-0">
+              {/* <div className="mt-4 flex items-center gap-4 md:mt-0">
                 {walletConnected ? (
                   <div className="flex items-center gap-2">
                     <Avatar className="h-8 w-8 border border-[#415444]">
@@ -828,7 +828,7 @@ const handleConfirmPostSubmission = (address: string | undefined, to: string, to
                     Connect Wallet
                   </Button>
                 )}
-              </div>
+              </div> */}
             </div>
 
             {/* Main Grid Layout */}

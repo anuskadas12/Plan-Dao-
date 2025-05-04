@@ -360,13 +360,13 @@ export default function MessagesPage() {
   const toaddress = "0x9abFF76733c76Eef3f3DC0a44FD8FD3e8e8b4b94"
   // Replace with actual address
 
-  const handlePaymentConfirm = (add :string , to : string , token :number) => {
+  const handlePaymentConfirm = (address: string | undefined, to: string, token: number) => {
     
     writeContract({
           abi: propAbi,
           functionName: "post",
           address: contract_address,
-          args: [add, to, token],
+          args: [address, to, token],
         })
 
 
@@ -795,13 +795,7 @@ export default function MessagesPage() {
 
                             <Button
                               className="w-full bg-[#415444] hover:bg-[#415444]/90"
-                              onClick={() => {
-                                if (address && toaddress) {
-                                  handlePaymentConfirm(address, toaddress, 14.5) // Pass the payment amount here
-                                } else {
-                                  console.error("Address or toAddress is undefined")
-                                }
-                              }}
+                              onClick={() => handlePaymentConfirm(address,toaddress,5)} // Replace with actual address and token amount
                                 // Show payment confirmation popup
                                 
                               

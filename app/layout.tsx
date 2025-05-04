@@ -8,8 +8,8 @@ import { headers } from "next/headers"; // added
 import ContextProvider from './context'; // updated import path
 
 export const metadata: Metadata = {
-  title: "AppKit Example App",
-  description: "Powered by WalletConnect"
+  title: "PlanDao",
+  description: "PlanDao",
 };
 
 export default async function RootLayout({
