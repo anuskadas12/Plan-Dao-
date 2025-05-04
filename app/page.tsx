@@ -627,7 +627,7 @@ export default function HomePage() {
                         ),
                         title: "$PLAN Token",
                         description: "Used for bookings, rewards, tipping, and voting in the DAO.",
-                        image: "https://images.unsplash.com/photo-1605792657660-596af9009e82?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                        image: "https://images.theconversation.com/files/225226/original/file-20180627-112598-bhl55u.jpg?ixlib=rb-4.1.0&q=20&auto=format&w=320&fit=clip&dpr=2&usm=12&cs=strip"
                       },
                       {
                         icon: (
