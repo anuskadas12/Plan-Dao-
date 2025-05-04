@@ -92,15 +92,15 @@ Both sides build reputation in the system.
 
 
 
- 🚀 Get Started 
+🚀 Get Started 
 
 
 
 
 
- 🔍 Explore Travel
+   🔍 Explore Travel
 
- Browse verified travel opportunities, including unique RWA-backed experiences.
+  Browse verified travel opportunities, including unique RWA-backed experiences.
 
 
 
