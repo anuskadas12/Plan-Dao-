@@ -6,7 +6,7 @@ import { useState, useEffect, type JSX } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { usePathname } from "next/navigation"
-import { ChevronRight, Compass, Globe, Home, Menu, MessageSquare, Settings, User, X } from "lucide-react"
+import { ChevronRight, ClipboardList, Compass, Globe, Home, Menu, MessageSquare, Settings, User, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -56,6 +56,7 @@ export function VerticalNavbar(): JSX.Element {
     { name: "Home", icon: <Home className={cn(expanded ? "h-5 w-5" : "h-7 w-7")} />, href: "/" },
     { name: "Explore", icon: <Compass className={cn(expanded ? "h-5 w-5" : "h-7 w-7")} />, href: "/explore" },
     { name: "Messages", icon: <MessageSquare className={cn(expanded ? "h-5 w-5" : "h-7 w-7")} />, href: "/messages" },
+    { name: "Review", icon: <ClipboardList className={cn(expanded ? "h-5 w-5" : "h-7 w-7")} />, href: "/review" },
     { name: "Profile", icon: <User className={cn(expanded ? "h-5 w-5" : "h-7 w-7")} />, href: "/profile" },
     { name: "Settings", icon: <Settings className={cn(expanded ? "h-5 w-5" : "h-7 w-7")} />, href: "/settings" },
   ]

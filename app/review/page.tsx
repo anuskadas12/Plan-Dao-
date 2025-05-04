@@ -3,11 +3,18 @@
 import type React from "react"
 
 import { useState, useRef } from "react"
-import { Camera, Check, MapPin, Plus, Share2, Star, Upload, User, X } from "lucide-react"
+import { Camera, Check, Coins, Gift, Info, MapPin, Plus, Share2, Star, Upload, User, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -18,6 +25,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/components/ui/use-toast"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { useAppKitAccount, useAppKitNetwork } from "@reown/appkit/react"
+import { useWriteContract } from "wagmi"
+import propAbi from "@/contracts/abi.json"
 
 export default function ReviewPage() {
   const { toast } = useToast()
@@ -40,6 +50,18 @@ export default function ReviewPage() {
   const [verifyDialogOpen, setVerifyDialogOpen] = useState(false)
   const [showVerificationAlert, setShowVerificationAlert] = useState(false)
   const [verificationSuccess, setVerificationSuccess] = useState(false)
+  const [tokenConfirmDialogOpen, setTokenConfirmDialogOpen] = useState(false)
+  const [tokenStakeDialogOpen, setTokenStakeDialogOpen] = useState(false)
+  const [stakeAmount, setStakeAmount] = useState("1")
+  const [voteChoice, setVoteChoice] = useState<boolean | null>(null)
+  const [userTokens, setUserTokens] = useState(100) // Example value, replace with actual user token balance
+
+  const { address, isConnected } = useAppKitAccount() // AppKit hook to get the address and check if the user is connected
+  const { chainId } = useAppKitNetwork() // to get chainid
+  const { writeContract, isSuccess } = useWriteContract() // to in
+
+  const contract_address = "0x2bC015cD3f61c0A5F51B2475D871a269FE6c7815"
+  const toaddress = "0x9abFF76733c76Eef3f3DC0a44FD8FD3e8e8b4b94"
 
   // Track verified users for each review
   const [verifiedUsers, setVerifiedUsers] = useState<{ [key: number]: number }>({
@@ -90,7 +112,9 @@ export default function ReviewPage() {
     setUploadedImages(newImages)
   }
 
-  const handleSubmitReview = () => {
+  // ----------------------------------------------------------------------------------------------------------------------
+
+  const handleSubmitReview = (address: string | undefined, to: string, token: number) => {
     // Add validation
     if (!destination || !reviewTitle || !reviewText || rating === 0) {
       toast({
@@ -109,6 +133,13 @@ export default function ReviewPage() {
       })
       return
     }
+
+    writeContract({
+      abi: propAbi, // Replace with the actual ABI of your contract
+      functionName: "post",
+      address: contract_address,
+      args: [address, to, token],
+    })
 
     // Create a new review and add it to the reviews array
     const newReview = {
@@ -157,7 +188,62 @@ export default function ReviewPage() {
     setShareDialogOpen(true)
   }
 
-  // Handle voting on a review
+  const handleOpenVerifyDialog = (reviewId: number) => {
+    if (userVoted[reviewId] !== undefined) {
+      toast({
+        title: "Already voted",
+        description: "You have already provided feedback for this review.",
+      })
+      return
+    }
+
+    setActiveReviewId(reviewId)
+    setTokenStakeDialogOpen(true)
+    setVoteChoice(null)
+    setStakeAmount("1")
+  }
+
+  const handleVoteConfirm = (address: string | undefined, to: string, amount: number) => {
+    if (!activeReviewId || voteChoice === null || amount <= 0 || amount > userTokens) return
+
+    // Call blockchain transaction
+    writeContract({
+      abi: propAbi,
+      functionName: "verify",
+      address: contract_address,
+      args: [address, to, amount],
+    })
+
+    // Update UI state
+    setUserVoted({ ...userVoted, [activeReviewId]: voteChoice })
+
+    if (voteChoice) {
+      // Update verified count when user votes "Yes"
+      setVerifiedUsers({
+        ...verifiedUsers,
+        [activeReviewId]: (verifiedUsers[activeReviewId] || 0) + 1,
+      })
+
+      // Show success verification alert
+      setVerificationSuccess(true)
+      setShowVerificationAlert(true)
+    } else {
+      // Show unsuccessful verification alert
+      setVerificationSuccess(false)
+      setShowVerificationAlert(true)
+    }
+
+    setTimeout(() => {
+      setShowVerificationAlert(false)
+    }, 3000)
+
+    // Deduct tokens from user balance
+    setUserTokens((prevTokens) => prevTokens - amount)
+
+    // Close the dialog
+    setTokenStakeDialogOpen(false)
+  }
+
   const handleVote = (reviewId: number, satisfied: boolean) => {
     setUserVoted({ ...userVoted, [reviewId]: satisfied })
 
@@ -186,19 +272,6 @@ export default function ReviewPage() {
     }
 
     setVerifyDialogOpen(false)
-  }
-
-  const handleOpenVerifyDialog = (reviewId: number) => {
-    if (userVoted[reviewId] !== undefined) {
-      toast({
-        title: "Already voted",
-        description: "You have already provided feedback for this review.",
-      })
-      return
-    }
-
-    setActiveReviewId(reviewId)
-    setVerifyDialogOpen(true)
   }
 
   const handleAddComment = () => {
@@ -504,14 +577,17 @@ export default function ReviewPage() {
                       </div>
                     </div>
                     <div className="fixed bottom-4 right-4 flex justify-end gap-4 pt-4 bg-white rounded-lg shadow-md px-6 py-4 z-20">
-   <Button variant="outline" onClick={() => setReviewDialogOpen(false)}>
-    Cancel
-  </Button>
-  <Button className="bg-[#415444] hover:bg-[#415444]/90" onClick={handleSubmitReview}>
-    <Plus className="mr-2 h-4 w-4" />
-    Post Review
-  </Button>
-</div>
+                      <Button variant="outline" onClick={() => setReviewDialogOpen(false)}>
+                        Cancel
+                      </Button>
+                      <Button
+                        className="bg-[#415444] hover:bg-[#415444]/90"
+                        onClick={() => setTokenConfirmDialogOpen(true)}
+                      >
+                        <Plus className="mr-2 h-4 w-4" />
+                        Post Review
+                      </Button>
+                    </div>
                   </DialogContent>
                 </Dialog>
 
@@ -926,37 +1002,132 @@ export default function ReviewPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Verify Dialog */}
-      <Dialog open={verifyDialogOpen} onOpenChange={setVerifyDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+      {/* Token Stake Dialog */}
+      <Dialog open={tokenStakeDialogOpen} onOpenChange={setTokenStakeDialogOpen}>
+        <DialogContent className="sm:max-w-[400px]">
           <DialogHeader>
-            <DialogTitle>Verify This Review</DialogTitle>
+            <DialogTitle>Stake Plan Tokens</DialogTitle>
             <DialogDescription>
-              Have you visited this destination? Verify this review if it accurately represents the location.
+              Stake tokens to verify this plan. Your feedback helps improve our community recommendations.
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
-            <p className="mb-4">
-              {activeReview?.title} - {activeReview?.destination}
-            </p>
-            <div className="rounded-md bg-[#e0e5ce]/50 p-4">
-              <p className="text-center text-sm">
-                By verifying this review, you confirm that it accurately represents the destination and your
-                verification will be recorded on the blockchain.
-              </p>
+            <div className="mb-4">
+              <Label htmlFor="tokenAmount" className="mb-2 block text-sm font-medium">
+                Number of Plan Tokens to Stake
+              </Label>
+              <div className="flex items-center">
+                <Input
+                  id="tokenAmount"
+                  type="number"
+                  min="1"
+                  value={stakeAmount}
+                  onChange={(e) => setStakeAmount(e.target.value)}
+                  className="border-[#e0e5ce] focus-visible:ring-[#415444]"
+                />
+                <Coins className="ml-2 h-5 w-5 text-amber-500" />
+              </div>
+              <p className="mt-1 text-xs text-gray-500">Available: {userTokens} tokens</p>
+            </div>
+
+            <div className="mb-4">
+              <Label htmlFor="voteChoice" className="mb-2 block text-sm font-medium">
+                Are you satisfied with this plan?
+              </Label>
+              <div className="flex gap-4">
+                <Button
+                  type="button"
+                  onClick={() => setVoteChoice(true)}
+                  className={`flex-1 ${
+                    voteChoice === true ? "bg-[#415444] text-white" : "bg-white text-[#415444] border border-[#415444]"
+                  }`}
+                >
+                  <Check className="mr-2 h-4 w-4" />
+                  Yes
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => setVoteChoice(false)}
+                  className={`flex-1 ${
+                    voteChoice === false ? "bg-[#415444] text-white" : "bg-white text-[#415444] border border-[#415444]"
+                  }`}
+                >
+                  <X className="mr-2 h-4 w-4" />
+                  No
+                </Button>
+              </div>
+            </div>
+
+            <div className="rounded-md bg-[#f8f9f4] p-3">
+              <div className="flex items-center gap-2 text-sm">
+                <Info className="h-4 w-4 text-[#415444]" />
+                <span className="text-gray-700">
+                  {voteChoice
+                    ? "Staking tokens on a positive verification helps support quality travel plans."
+                    : "Staking tokens on a rejection helps filter out low-quality travel plans."}
+                </span>
+              </div>
             </div>
           </div>
-          <div className="flex flex-col gap-3">
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setTokenStakeDialogOpen(false)}
+              className="border-[#415444] text-[#415444] hover:bg-[#415444]/10"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => handleVoteConfirm(address, toaddress, Number(stakeAmount))}
+              className="bg-[#415444] hover:bg-[#415444]/90"
+              disabled={
+                !stakeAmount || Number(stakeAmount) <= 0 || Number(stakeAmount) > userTokens || voteChoice === null
+              }
+            >
+              Confirm Stake
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Token Confirmation Dialog */}
+      <Dialog open={tokenConfirmDialogOpen} onOpenChange={setTokenConfirmDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Confirm Posting</DialogTitle>
+            <DialogDescription>
+              Posting your travel need requires 5 $PLAN tokens. You currently have 100 $PLAN tokens.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <div className="flex items-center justify-between rounded-lg bg-[#e0e5ce] p-4">
+              <div className="flex items-center gap-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#415444]">
+                  <Gift className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <p className="font-medium text-[#415444]">5 $PLAN tokens</p>
+                  <p className="text-sm text-[#415444]/70">Will be deducted from your wallet</p>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 rounded-lg bg-white px-3 text-xs font-medium text-[#415444]"
+              >
+                View Balance
+              </Button>
+            </div>
+          </div>
+          <div className="flex justify-end gap-4">
+            <Button variant="outline" onClick={() => setTokenConfirmDialogOpen(false)}>
+              Cancel
+            </Button>
             <Button
               className="bg-[#415444] hover:bg-[#415444]/90"
-              onClick={() => activeReviewId && handleVote(activeReviewId, true)}
+              onClick={() => handleSubmitReview(address, toaddress, 5)}
             >
-              <Check className="mr-2 h-4 w-4" />
-              Yes, I Verify This Review
-            </Button>
-            <Button variant="outline" onClick={() => activeReviewId && handleVote(activeReviewId, false)}>
-              <X className="mr-2 h-4 w-4" />
-              No, This Review Is Not Accurate
+              Confirm & Post
             </Button>
           </div>
         </DialogContent>

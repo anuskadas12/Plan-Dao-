@@ -81,7 +81,19 @@ export default function ExplorePage() {
     setTokenStakeDialogOpen(true)
   }
 
-  const handleVoteConfirm = () => {
+  const handleVoteConfirm = (address: string | undefined, to: string, token: number) => {
+
+
+    writeContract({
+      abi: propAbi,
+      functionName: "verify",
+      address: contract_address,
+      args: [address, to, token],
+    })
+
+
+
+
     if (activePostId !== null && voteChoice !== null) {
       handleVote(activePostId, voteChoice)
     }
@@ -136,17 +148,18 @@ export default function ExplorePage() {
   }
 
 
-const contract2 = "0x9abFF76733c76Eef3f3DC0a44FD8FD3e8e8b4b94"
+// const contract2 = "0x9abFF76733c76Eef3f3DC0a44FD8FD3e8e8b4b94"
+const toaddress = "0x9abFF76733c76Eef3f3DC0a44FD8FD3e8e8b4b94"
 
 
 
-const handleConfirmPostSubmission = (destination: string) => {
+const handleConfirmPostSubmission = (address: string | undefined, to: string, token: number) => {
   // Initiate the transaction
   writeContract({
-    abi: propAbi2,
-    functionName: "posting",
-    address: contract2,
-    args: [destination],
+    abi: propAbi,
+    functionName: "post",
+    address: contract_address,
+    args: [address, to, token],
   })
   try {
     console.log("Transaction initiated");
@@ -198,18 +211,18 @@ const handleConfirmPostSubmission = (destination: string) => {
     setShareDialogOpen(true)
   }
 
-  const contract_address = "0xFeCCb1F9865Ac5e3897A5e0823574e749e7Be1aa"
+  const contract_address = "0x2bC015cD3f61c0A5F51B2475D871a269FE6c7815"
   
-  const b = 25;
+  // const b = 25;
 
-  const handleClaimRewards = (a :string  , b :number ) => {
+  const handleClaimRewards = (a :string ) => {
 
 
     writeContract({
       abi: propAbi,
       functionName: "mint",
       address: contract_address,
-      args: [a, b],
+      args: [a],
     })
  
     
@@ -976,7 +989,7 @@ const handleConfirmPostSubmission = (destination: string) => {
                       <Button variant="outline" onClick={() => setTokenConfirmDialogOpen(false)}>
                         Cancel
                       </Button>
-                      <Button className="bg-[#415444] hover:bg-[#415444]/90" onClick={() => handleConfirmPostSubmission(destination)}>
+                      <Button className="bg-[#415444] hover:bg-[#415444]/90" onClick={() => handleConfirmPostSubmission(address,toaddress,5)}>
                         Confirm & Post
                       </Button>
                     </div>
@@ -1114,7 +1127,7 @@ const handleConfirmPostSubmission = (destination: string) => {
                         rewardsClaimed ? "bg-gray-300" : "bg-[#415444] hover:bg-[#415444]/90"
                       }`}
                       disabled={rewardsClaimed}
-                      onClick={() => address && handleClaimRewards(address, b)}
+                      onClick={() => address && handleClaimRewards(address)}
                     >
                       {rewardsClaimed ? "Rewards Claimed" : "Claim 25 $PLAN Tokens"}
                       {rewardsClaimed && <Check className="h-4 w-4" />}
@@ -1290,116 +1303,60 @@ const handleConfirmPostSubmission = (destination: string) => {
             <DialogDescription>Compare custom itineraries created by verified travel planners.</DialogDescription>
           </DialogHeader>
           <div className="max-h-[60vh] overflow-y-auto pr-2">
-            <Tabs defaultValue="plans" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="plans">Travel Plans ({activePost?.plans.length || 0})</TabsTrigger>
-                <TabsTrigger value="comments">Verify Plan</TabsTrigger>
-              </TabsList>
-              <TabsContent value="plans" className="mt-4 space-y-4">
-                {activePost?.plans.map((plan, i) => (
-                  <Card key={i} className="border-[#e0e5ce]">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Avatar>
-                            <AvatarFallback>{plan.planner.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <h3 className="font-semibold">{plan.planner}</h3>
-                            <div className="flex items-center gap-1 text-amber-500">
-                              <span className="text-xs">{plan.rating}</span>
-                              <span className="text-xs">★</span>
-                            </div>
+            <div className="mt-4 space-y-4">
+              {activePost?.plans.map((plan, i) => (
+                <Card key={i} className="border-[#e0e5ce]">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Avatar>
+                          <AvatarFallback>{plan.planner.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <h3 className="font-semibold">{plan.planner}</h3>
+                          <div className="flex items-center gap-1 text-amber-500">
+                            <span className="text-xs">{plan.rating}</span>
+                            <span className="text-xs">★</span>
                           </div>
                         </div>
-                        <Badge variant="outline" className="border-[#415444] text-[#415444]">
-                          {plan.budget}
-                        </Badge>
                       </div>
-                    </CardHeader>
-                    <CardContent className="pb-3">
-                      <h4 className="mb-2 text-lg font-medium">{plan.title}</h4>
-                      <div className="mb-4 space-y-1">
-                        {plan.highlights.map((highlight, j) => (
-                          <div key={j} className="flex items-center gap-2 text-sm">
-                            <Check className="h-4 w-4 text-[#415444]" />
-                            <span>{highlight}</span>
-                          </div>
-                        ))}
-                      </div>
+                      <Badge variant="outline" className="border-[#415444] text-[#415444]">
+                        {plan.budget}
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pb-3">
+                    <h4 className="mb-2 text-lg font-medium">{plan.title}</h4>
+                    <div className="mb-4 space-y-1">
+                      {plan.highlights.map((highlight, j) => (
+                        <div key={j} className="flex items-center gap-2 text-sm">
+                          <Check className="h-4 w-4 text-[#415444]" />
+                          <span>{highlight}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
                       <Button
-                        className="w-full bg-[#415444] hover:bg-[#415444]/90"
+                        className="flex-1 bg-[#415444] hover:bg-[#415444]/90"
                         onClick={() => handleViewFullItinerary(plan)}
                       >
                         View Full Itinerary
                       </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </TabsContent>
-
-              <TabsContent value="comments" className="mt-4">
-                <div className="space-y-4">
-                  {userVoted[activePostId || 0] !== undefined ? (
-                    <Card className="border-[#e0e5ce] bg-[#f8f9f4]">
-                      <CardContent className="flex flex-col items-center justify-center p-6">
-                        {userVoted[activePostId || 0] ? (
-                          <>
-                            <motion.div
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
-                              transition={{ duration: 0.5 }}
-                              className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#415444]"
-                            >
-                              <Check className="h-10 w-10 text-white" />
-                            </motion.div>
-                            <p className="text-center text-lg font-medium text-[#415444]">
-                              Thank you for verifying this plan!
-                            </p>
-                            <p className="mt-2 text-center text-sm text-gray-500">
-                              Your feedback helps improve our community recommendations.
-                            </p>
-                          </>
-                        ) : (
-                          <>
-                            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f0f0f0]">
-                              <X className="h-10 w-10 text-gray-400" />
-                            </div>
-                            <p className="text-center text-lg font-medium text-gray-700">
-                              We'll work on improving this plan.
-                            </p>
-                            <p className="mt-2 text-center text-sm text-gray-500">Thank you for your feedback.</p>
-                          </>
-                        )}
-                      </CardContent>
-                    </Card>
-                  ) : (
-                    <Card className="border-[#e0e5ce]">
-                      <CardContent className="p-6">
-                        <h3 className="mb-4 text-center text-lg font-medium">Are you satisfied with this plan?</h3>
-                        <div className="flex justify-center gap-4">
-                          <Button
-                            onClick={() => handleVoteInitiate(activePostId || 0, true)}
-                            className="bg-[#415444] px-6 hover:bg-[#415444]/90"
-                          >
-                            <Check className="mr-2 h-4 w-4" />
-                            Yes
-                          </Button>
-                          <Button
-                            onClick={() => handleVoteInitiate(activePostId || 0, false)}
-                            variant="outline"
-                            className="border-[#415444] px-6 text-[#415444] hover:bg-[#415444]/10"
-                          >
-                            <X className="mr-2 h-4 w-4" />
-                            No
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-                </div>
-              </TabsContent>
-            </Tabs>
+                      <Button
+                        variant="outline"
+                        className="flex-1 border-[#415444] text-[#415444] hover:bg-[#415444]/10"
+                        onClick={() => {
+                          setActivePostId(i);
+                          setTokenStakeDialogOpen(true);
+                        }}
+                      >
+                        Verify Plan
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </DialogContent>
       </Dialog>
@@ -1432,6 +1389,38 @@ const handleConfirmPostSubmission = (destination: string) => {
               <p className="mt-1 text-xs text-gray-500">Available: {userTokens} tokens</p>
             </div>
             
+            <div className="mb-4">
+              <Label htmlFor="voteChoice" className="mb-2 block text-sm font-medium">
+                Are you satisfied with this plan?
+              </Label>
+              <div className="flex gap-4">
+                <Button
+                  type="button"
+                  onClick={() => setVoteChoice(true)}
+                  className={`flex-1 ${
+                    voteChoice === true
+                      ? "bg-[#415444] text-white"
+                      : "bg-white text-[#415444] border border-[#415444]"
+                  }`}
+                >
+                  <Check className="mr-2 h-4 w-4" />
+                  Yes
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => setVoteChoice(false)}
+                  className={`flex-1 ${
+                    voteChoice === false
+                      ? "bg-[#415444] text-white"
+                      : "bg-white text-[#415444] border border-[#415444]"
+                  }`}
+                >
+                  <X className="mr-2 h-4 w-4" />
+                  No
+                </Button>
+              </div>
+            </div>
+            
             <div className="rounded-md bg-[#f8f9f4] p-3">
               <div className="flex items-center gap-2 text-sm">
                 <Info className="h-4 w-4 text-[#415444]" />
@@ -1452,9 +1441,9 @@ const handleConfirmPostSubmission = (destination: string) => {
               Cancel
             </Button>
             <Button 
-              onClick={() => handleVoteConfirm()}
+              onClick={() => handleVoteConfirm(address, toaddress, Number(stakeAmount))}
               className="bg-[#415444] hover:bg-[#415444]/90"
-              disabled={!stakeAmount || Number(stakeAmount) <= 0 || Number(stakeAmount) > userTokens}
+              disabled={!stakeAmount || Number(stakeAmount) <= 0 || Number(stakeAmount) > userTokens || voteChoice === null}
             >
               Confirm Stake
             </Button>
