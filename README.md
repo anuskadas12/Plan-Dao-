@@ -33,7 +33,7 @@ Plan DAO revolutionizes travel by connecting **travellers** with **travel agents
 | 💸 **Escrow Payments**            | Funds are locked in a smart contract until travel completion is verified.                        |
 | 👥 **DAO Verification**           | Community (DAO) votes on submitted travel proof (photos, reviews) to authorize payouts.          |
 | 🏠 **RWA Integration**            | Plans are backed by real-world assets (hotels, tours) for trust & reliability.                   |
-| 🔒 **Privacy-First (Pharos)**     | Pharos zk-proofs ensure anonymity while preserving trustless identity verification.              |
+| 🔒 **Privacy-First (U2U network)**     | U2U zk-proofs ensure anonymity while preserving trustless identity verification.              |
 | 🚫 **No Middlemen Fees**          | Fully peer-to-peer with no extra platform charges.                                               |
 
 ---
@@ -71,7 +71,7 @@ Plan DAO is **built exclusively on U2U network** to leverage:
 
 ## 🛠️ Tech Stack
 
-- **Solidity Smart Contracts (Pharos EVM)**
+- **Solidity Smart Contracts (U2U EVM)**
 - **U2U network (DAG + EVM)**
 - **IPFS/Filecoin for Proof Storage**
 - **React Frontend (suggested)**
