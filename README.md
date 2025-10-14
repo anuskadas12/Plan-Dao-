@@ -1,7 +1,7 @@
 # 🌍 Plan DAO
 
 **Decentralized Travel Booking Platform**  
-Custom travel experiences powered by smart contracts, escrow payments, DAO verification, and zk-proof privacy—all on **Pharos**.
+Custom travel experiences powered by smart contracts, escrow payments, DAO verification, and zk-proof privacy—all on **U2U Solaris Mainnet**.
 
 ---
 
@@ -19,9 +19,9 @@ Plan DAO revolutionizes travel by connecting **travellers** with **travel agents
 
 ## 🔗 Smart Contract
 
-- **Network:** Pharos testnet
-- **Contract Address:** `0x2bC015cD3f61c0A5F51B2475D871a269FE6c7815`
-- **Explorer Link:** [View on Pharosscan](https://pharosscan.xyz/address/0x2bC015cD3f61c0A5F51B2475D871a269FE6c7815)
+- **Network:** U2U Solaris Mainnet
+- **Contract Address:** `0x857417bCd1F1b18e306833c459b4B6c986FeA821`
+- **Explorer Link:** [View on U2U Solaris Mainnet](https://u2uscan.xyz/address/0x857417bCd1F1b18e306833c459b4B6c986FeA821?tab=txs)
 
 ---
 
