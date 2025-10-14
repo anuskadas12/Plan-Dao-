@@ -1,7 +1,7 @@
 # 🌍 Plan DAO
 
 **Decentralized Travel Booking Platform**  
-Custom travel experiences powered by smart contracts, escrow payments, DAO verification, and zk-proof privacy—all on **Pharos**.
+Custom travel experiences powered by smart contracts, escrow payments, DAO verification, and zk-proof privacy—all on **U2U Solaris Mainnet**.
 
 ---
 
@@ -13,15 +13,15 @@ Plan DAO revolutionizes travel by connecting **travellers** with **travel agents
 - 🔐 **Escrow-secured payments**
 - 🏛️ **DAO-verified service quality**
 - 🏢 **Real-world asset (RWA) guarantees**
-- 🕶️ **Anonymous bookings via zk-proofs (Pharos integrated)**
+- 🕶️ **Anonymous bookings via zk-proofs (U2U Solaris Mainnet)**
 
 ---
 
 ## 🔗 Smart Contract
 
-- **Network:** Pharos testnet
-- **Contract Address:** `0x2bC015cD3f61c0A5F51B2475D871a269FE6c7815`
-- **Explorer Link:** [View on Pharosscan](https://pharosscan.xyz/address/0x2bC015cD3f61c0A5F51B2475D871a269FE6c7815)
+- **Network:** U2U Solaris Mainnet
+- **Contract Address:** `0x857417bCd1F1b18e306833c459b4B6c986FeA821`
+- **Explorer Link:** [View on U2U Solaris Mainnet](https://u2uscan.xyz/address/0x857417bCd1F1b18e306833c459b4B6c986FeA821?tab=txs)
 
 ---
 
@@ -33,7 +33,7 @@ Plan DAO revolutionizes travel by connecting **travellers** with **travel agents
 | 💸 **Escrow Payments**            | Funds are locked in a smart contract until travel completion is verified.                        |
 | 👥 **DAO Verification**           | Community (DAO) votes on submitted travel proof (photos, reviews) to authorize payouts.          |
 | 🏠 **RWA Integration**            | Plans are backed by real-world assets (hotels, tours) for trust & reliability.                   |
-| 🔒 **Privacy-First (Pharos)**     | Pharos zk-proofs ensure anonymity while preserving trustless identity verification.              |
+| 🔒 **Privacy-First (U2U network)**     | U2U zk-proofs ensure anonymity while preserving trustless identity verification.              |
 | 🚫 **No Middlemen Fees**          | Fully peer-to-peer with no extra platform charges.                                               |
 
 ---
@@ -58,9 +58,9 @@ The following diagram illustrates the **Plan DAO user journey**:
 
 ---
 
-## 🔑 Why Pharos?
+## 🔑 Why U2U Network?
 
-Plan DAO is **built exclusively on Pharos** to leverage:
+Plan DAO is **built exclusively on U2U network** to leverage:
 
 - 🔒 **zk-proof-based identity verification**
 - ✅ **Anonymous yet verifiable user interactions**
@@ -71,8 +71,8 @@ Plan DAO is **built exclusively on Pharos** to leverage:
 
 ## 🛠️ Tech Stack
 
-- **Solidity Smart Contracts (Pharos EVM)**
-- **Pharos zk-Proof Integration**
+- **Solidity Smart Contracts (U2U EVM)**
+- **U2U network (DAG + EVM)**
 - **IPFS/Filecoin for Proof Storage**
 - **React Frontend (suggested)**
 - **DAO Voting (Snapshot or custom)**
@@ -84,7 +84,7 @@ Plan DAO is **built exclusively on Pharos** to leverage:
 - 🏅 Agent reputation & scoring system
 - 🖼️ NFT-based travel package certifications
 - 📱 Mobile app (iOS/Android)
-- 🔗 Layer-2 enhancements for Pharos optimization
+- 🔗 Layer-2 enhancements for U2U network
 
 ---
 
@@ -95,14 +95,14 @@ Plan DAO is **built exclusively on Pharos** to leverage:
 3. **No extra fees**—100% peer-to-peer.
 4. **zk-Proof privacy** keeps identities safe yet trustable.
 5. **RWA-backed guarantees** provide additional safety & credibility.
-6. **Exclusively on Pharos** for privacy-first, fast, and cost-efficient booking.
+6. **Exclusively on U2U network** for privacy-first, fast, and cost-efficient booking.
 
 ---
 
 ## ✨ Why Plan DAO?
 
 > "Decentralized travel booking secured by escrow, DAO verification, and RWA-backed guarantees.  
-Built 100% on Pharos for privacy, security, and next-gen peer-to-peer travel."
+Built 100% on U2U network for privacy, security, and next-gen peer-to-peer travel."
 
 ---
 
