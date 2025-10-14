@@ -60,7 +60,7 @@ export default function ReviewPage() {
   const { chainId } = useAppKitNetwork() // to get chainid
   const { writeContract, isSuccess } = useWriteContract() // to in
 
-  const contract_address = "0x2bC015cD3f61c0A5F51B2475D871a269FE6c7815"
+  const contract_address = "0x857417bCd1F1b18e306833c459b4B6c986FeA821"
   const toaddress = "0x9abFF76733c76Eef3f3DC0a44FD8FD3e8e8b4b94"
 
   // Track verified users for each review

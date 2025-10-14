@@ -211,7 +211,7 @@ const handleConfirmPostSubmission = (address: string | undefined, to: string, to
     setShareDialogOpen(true)
   }
 
-  const contract_address = "0x2bC015cD3f61c0A5F51B2475D871a269FE6c7815"
+  const contract_address = "0x857417bCd1F1b18e306833c459b4B6c986FeA821"
   
   // const b = 25;
 
