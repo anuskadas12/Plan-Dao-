@@ -334,7 +334,7 @@ export default function ReviewPage() {
       tags: ["Cultural", "Food", "Nature"],
       images: [
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGFRGykMeF86XUjm8_1IkelJyLX1cttKyXZw&s",
-        "https://gaijinpot.scdn3.secure.raxcdn.com/app/uploads/sites/6/2021/02/Kyoto-Japan-old-town-streets-in-the-Higashiyama-district@3x-1024x683.jpg",
+        "https://imgs.search.brave.com/726hNAgG5AfgmO3gJXp3ROm1JbzjTAbAf1-RVzO6Ls4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNjcy/MTAyOTU2L3Bob3Rv/L2t5b3RvLW9sZC1j/aXR5LWphcGFuLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz0z/d3VraHloTm94ZE9M/T0ljZGVyVERQREx4/eFgtbEdOejhlRlNJ/SUJNWmIwPQ",
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSijYc6zTKzzWEvx3yRrBGNAwkJVsx7dOaBfQ&s",
         "https://cdn.craft.cloud/101e4579-0e19-46b6-95c6-7eb27e4afc41/assets/uploads/pois/kyoto-japan-frommers.jpg?width=1200&height=630&quality=82&fit=cover&s=kmxdKluB3-i_ntEA7Vpv4uAoEyo4RzcoXlpIiJxEprA",
       ],
