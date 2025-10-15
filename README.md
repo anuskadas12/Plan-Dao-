@@ -62,11 +62,13 @@ The following diagram illustrates the **Plan DAO user journey**:
 
 Plan DAO is **built exclusively on U2U network** to leverage:
 
-- 🔒 **zk-proof-based identity verification**
+- 🔒 **zk-Proof Identity – Enables anonymous yet verifiable user interactions**
 - ✅ **Anonymous yet verifiable user interactions**
-- 🛡️ **Strong anti-fraud protection for DAO governance**
-- ⚡ **Optimized fees & fast finality unique to Pharos**
+- 🛡️ **Secure DAO Governance – Prevents fraud and fake participation**
+- ⚡ **Fast, scalable, and cost-efficient infrastructure built on U2U Networks**
 
+
+  This makes U2U the ideal network for secure, credential-backed travel platforms like Plan DAO.
 ---
 
 ## 🛠️ Tech Stack
